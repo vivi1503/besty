@@ -1,3 +1,19 @@
+# video_editor.py — Brand-Style Social Edit
+
+A fast-paced, brand-style editing tool built on FFmpeg: chains clips/photos
+with energetic transitions, a slow Ken Burns zoom on stills, a uniform color
+grade, bold captions, and music with optional ducking under clip audio.
+Targets the punchy 9:16 Reels/TikTok look.
+
+```bash
+python video_editor.py ./clips -a music.mp3 --duck --color-grade moody --dry-run
+```
+
+See `.claude/skills/viral-video-edit/SKILL.md` for the full editing
+methodology and flag reference.
+
+---
+
 # Spa Vlog — Images to Video
 
 A small Python tool that turns a folder of images into a polished **1080p
