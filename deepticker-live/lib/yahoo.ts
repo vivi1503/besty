@@ -67,7 +67,12 @@ export async function getYahooMarket(ticker: string) {
   });
 }
 
-function num(v: unknown): number | undefined {
+/**
+ * yahoo-finance2 fields often come back either as a plain number or as
+ * `{ raw, fmt, longFmt }`. Exported (and unit tested) since this shape
+ * mismatch is the most common source of silently-undefined market data.
+ */
+export function num(v: unknown): number | undefined {
   if (typeof v === "number" && Number.isFinite(v)) return v;
   if (v && typeof v === "object" && "raw" in v) {
     const raw = (v as { raw?: unknown }).raw;
@@ -75,11 +80,11 @@ function num(v: unknown): number | undefined {
   }
   return undefined;
 }
-function ratioToPct(v: unknown) {
+export function ratioToPct(v: unknown) {
   const n = num(v);
   return n === undefined ? undefined : n * 100;
 }
-function str(v: unknown): string | undefined {
+export function str(v: unknown): string | undefined {
   return typeof v === "string" ? v : undefined;
 }
 

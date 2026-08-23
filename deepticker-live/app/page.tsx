@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { AnalysisResponse } from "@/lib/types";
 import { Pillar } from "@/components/Pillar";
 import { errorMessage } from "@/lib/http";
@@ -32,18 +32,33 @@ export default function Home() {
   const [data, setData] = useState<AnalysisResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [retryAfter, setRetryAfter] = useState(0);
+
+  // Countdown for a 429 response's Retry-After, so the button re-enables
+  // itself the moment another request is actually likely to succeed.
+  useEffect(() => {
+    if (retryAfter <= 0) return;
+    const timer = setInterval(() => setRetryAfter(s => Math.max(0, s - 1)), 1000);
+    return () => clearInterval(timer);
+  }, [retryAfter]);
 
   async function analyze(e?: React.FormEvent) {
     e?.preventDefault();
     const t = ticker.trim().toUpperCase();
-    if (!t) return;
+    if (!t || retryAfter > 0) return;
     setLoading(true);
     setError("");
     setData(null);
     try {
       const res = await fetch(`/api/analyze/${encodeURIComponent(t)}`, { cache: "no-store" });
       const body = await res.json();
-      if (!res.ok) throw new Error(body.error || "שגיאה");
+      if (!res.ok) {
+        if (res.status === 429) {
+          const seconds = Number(res.headers.get("Retry-After"));
+          if (Number.isFinite(seconds) && seconds > 0) setRetryAfter(seconds);
+        }
+        throw new Error(body.error || "שגיאה");
+      }
       setData(body);
     } catch (err: unknown) {
       setError(errorMessage(err) || "אירעה שגיאה");
@@ -71,10 +86,11 @@ export default function Home() {
             value={ticker}
             onChange={e=>setTicker(e.target.value)}
             placeholder="הזן כל טיקר, לדוגמה AAPL / MSFT / TEVA.TA / ESLT.TA"
+            aria-label="טיקר לניתוח"
             dir="ltr"
           />
-          <button className="primaryBtn" disabled={loading}>
-            {loading ? "מנתח..." : "נתח חברה"}
+          <button className="primaryBtn" disabled={loading || retryAfter > 0}>
+            {loading ? "מנתח..." : retryAfter > 0 ? `נסה שוב בעוד ${retryAfter}s` : "נתח חברה"}
           </button>
         </form>
 
@@ -83,7 +99,10 @@ export default function Home() {
         </div>
       </header>
 
-      {error && <div className="errorBox">{error}</div>}
+      <div role="status" aria-live="polite">
+        {error && <div className="errorBox">{error}</div>}
+        {loading && <span className="srOnly">טוען ניתוח...</span>}
+      </div>
       {loading && <>
         <div className="skeleton"/>
         <div className="skeleton"/>
@@ -162,7 +181,7 @@ export default function Home() {
               <table>
                 <thead>
                   <tr>
-                    <th>שנה</th><th>הכנסות</th><th>רווח נקי</th><th>FCF</th><th>חייבים</th><th>חוב</th><th>SBC</th>
+                    <th scope="col">שנה</th><th scope="col">הכנסות</th><th scope="col">רווח נקי</th><th scope="col">FCF</th><th scope="col">חייבים</th><th scope="col">חוב</th><th scope="col">SBC</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -189,7 +208,7 @@ export default function Home() {
             <div className="sectionMeta">קבוצת השוואה לפי סקטור, כאשר הנתונים זמינים.</div>
             <div className="tableWrap">
               <table>
-                <thead><tr><th>טיקר</th><th>חברה</th><th>P/E</th><th>EV/EBIT</th></tr></thead>
+                <thead><tr><th scope="col">טיקר</th><th scope="col">חברה</th><th scope="col">P/E</th><th scope="col">EV/EBIT</th></tr></thead>
                 <tbody>
                 {data.peers.map(p => (
                   <tr key={p.ticker}>

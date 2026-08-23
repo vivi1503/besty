@@ -267,7 +267,7 @@ export async function getLatestAnnualFiling(cik: string) {
   return { url, form: r.form[idx], filingDate: r.filingDate[idx], acc };
 }
 
-function stripHtml(input: string) {
+export function stripHtml(input: string) {
   return input
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
     .replace(/<style[\s\S]*?<\/style>/gi, " ")
@@ -278,15 +278,24 @@ function stripHtml(input: string) {
     .trim();
 }
 
-export async function analyzeFilingText(url: string) {
-  const html = await secFetch<string>(url, 7 * 24 * 60 * 60 * 1000);
-  const text = stripHtml(html);
-  const customerPatterns = [
-    /(?:customer|customers)[^.]{0,180}?(?:represented|accounted for|comprised)[^.]{0,80}?(\d{1,3}(?:\.\d+)?)\s*%/ig,
-    /(\d{1,3}(?:\.\d+)?)\s*%[^.]{0,120}?(?:of\s+(?:our\s+)?(?:net\s+)?(?:sales|revenue|revenues))[^.]{0,160}?(?:customer)/ig
-  ];
+// Factories, not shared instances: these carry the `g` flag, so a single
+// reused RegExp would retain `lastIndex` across calls and silently skip
+// matches on the 2nd+ invocation. Each call to extractCustomerConcentration
+// needs fresh regex state.
+const customerConcentrationPatterns = () => [
+  /(?:customer|customers)[^.]{0,180}?(?:represented|accounted for|comprised)[^.]{0,80}?(\d{1,3}(?:\.\d+)?)\s*%/ig,
+  /(\d{1,3}(?:\.\d+)?)\s*%[^.]{0,120}?(?:of\s+(?:our\s+)?(?:net\s+)?(?:sales|revenue|revenues))[^.]{0,160}?(?:customer)/ig
+];
 
-  for (const rx of customerPatterns) {
+/**
+ * Scans already-plain-text filing content for an explicit single-customer
+ * concentration disclosure. Pure function (no I/O) so it's directly unit
+ * testable — the network fetch + HTML stripping lives in analyzeFilingText.
+ */
+export function extractCustomerConcentration(text: string):
+  | { found: true; percentage: number; excerpt: string }
+  | { found: false } {
+  for (const rx of customerConcentrationPatterns()) {
     const m = rx.exec(text);
     if (m) {
       const pct = Number(m[1]);
@@ -295,5 +304,10 @@ export async function analyzeFilingText(url: string) {
       if (pct >= 0 && pct <= 100) return { found: true, percentage: pct, excerpt };
     }
   }
-  return { found: false as const };
+  return { found: false };
+}
+
+export async function analyzeFilingText(url: string) {
+  const html = await secFetch<string>(url, 7 * 24 * 60 * 60 * 1000);
+  return extractCustomerConcentration(stripHtml(html));
 }
