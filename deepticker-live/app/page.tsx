@@ -59,7 +59,7 @@ export default function Home() {
           <div>
             <div className="logo">Deep<span>Ticker</span></div>
             <div className="subtitle">
-              ניתוח קשיח של חברות אמריקאיות לפי איכות הכנסות, מזומן, חוב, תמחור ודגלים חשבונאיים.
+              ניתוח קשיח של חברות לפי איכות הכנסות, מזומן, חוב, תמחור ודגלים חשבונאיים — כולל חברות זרות (לדוגמה טיקרים ישראליים מהבורסה בתל אביב, כגון TEVA.TA).
             </div>
           </div>
           <button className="printBtn" onClick={() => window.print()}>הורד / הדפס דוח</button>
@@ -70,7 +70,7 @@ export default function Home() {
             className="searchInput"
             value={ticker}
             onChange={e=>setTicker(e.target.value)}
-            placeholder="הזן טיקר אמריקאי, לדוגמה AAPL / MSFT / NVDA"
+            placeholder="הזן כל טיקר, לדוגמה AAPL / MSFT / TEVA.TA / ESLT.TA"
             dir="ltr"
           />
           <button className="primaryBtn" disabled={loading}>
@@ -79,7 +79,7 @@ export default function Home() {
         </form>
 
         <div className="small">
-          דוחות כספיים: SEC EDGAR · נתוני שוק: Yahoo Finance (מקור בלתי רשמי) · חסר מידע מוצג כ״לא זמין״.
+          דוחות כספיים: SEC EDGAR (חברות המדווחות לרשות ניירות ערך האמריקאית בלבד) · נתוני שוק: Yahoo Finance (מקור בלתי רשמי, מכסה גם בורסות זרות) · חסר מידע מוצג כ״לא זמין״.
         </div>
       </header>
 
@@ -123,6 +123,19 @@ export default function Home() {
               <div className="kpi"><div className="kpiLabel">שווי שוק</div><div className="kpiValue">{bigMoney(data.marketCap)}</div></div>
               <div className="kpi"><div className="kpiLabel">P/E נוכחי</div><div className="kpiValue">{data.currentPE?.toFixed(1) ?? "לא זמין"}</div></div>
             </div>
+
+            <div className={`verdictBanner verdict-${data.finalVerdict.decision}`}>
+              <div className="verdictLabel">מסקנה סופית: {data.finalVerdict.label}</div>
+              <div className="verdictReasoning">{data.finalVerdict.reasoning}</div>
+            </div>
+
+            {!data.secFilingsAvailable && (
+              <div className="secNote">
+                לא אותרו דיווחי SEC עבור טיקר זה — כנראה חברה שאינה כפופה לרשות ניירות ערך האמריקאית
+                (למשל חברה הנסחרת רק בבורסה בתל אביב). הניתוח למטה מבוסס אך ורק על נתוני השוק הזמינים
+                מ-Yahoo Finance; שאר הכללים מסומנים כ״אין מספיק מידע״ ולא כ-PASS, כפי שנקבע מראש.
+              </div>
+            )}
           </section>
 
           <section className="grid2" style={{marginTop:16}}>

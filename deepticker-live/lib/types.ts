@@ -36,6 +36,14 @@ export type PeerMetric = {
   evToEbit?: number;
 };
 
+export type FinalDecision = "yes" | "no" | "insufficient";
+
+export type FinalVerdict = {
+  decision: FinalDecision;
+  label: string;
+  reasoning: string;
+};
+
 export type AnalysisResponse = {
   ticker: string;
   companyName: string;
@@ -70,5 +78,7 @@ export type AnalysisResponse = {
   redFlags: RuleResult[];
   positives: RuleResult[];
   verdict: string;
+  finalVerdict: FinalVerdict;
+  secFilingsAvailable: boolean;
   sources: string[];
 };

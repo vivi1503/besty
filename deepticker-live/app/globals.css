@@ -219,6 +219,47 @@ td { font-size: 13px; }
   color: #ffc1c6;
 }
 
+.verdictBanner {
+  margin-top: 16px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1px solid;
+}
+.verdictLabel { font-weight: 900; font-size: 16px; }
+.verdictReasoning { margin-top: 6px; font-size: 13px; line-height: 1.7; }
+
+.verdict-yes {
+  border-color: rgba(40,209,124,.4);
+  background: rgba(40,209,124,.1);
+  color: var(--green);
+}
+.verdict-yes .verdictReasoning { color: #b7f0d3; }
+
+.verdict-no {
+  border-color: rgba(255,93,103,.4);
+  background: rgba(255,93,103,.1);
+  color: var(--red);
+}
+.verdict-no .verdictReasoning { color: #ffc1c6; }
+
+.verdict-insufficient {
+  border-color: rgba(181,193,207,.35);
+  background: rgba(181,193,207,.08);
+  color: #b5c1cf;
+}
+.verdict-insufficient .verdictReasoning { color: var(--muted); }
+
+.secNote {
+  margin-top: 12px;
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,176,32,.3);
+  background: rgba(255,176,32,.07);
+  color: #ffd9a0;
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+
 .skeleton {
   min-height: 120px;
   border-radius: 16px;

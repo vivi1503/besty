@@ -5,6 +5,8 @@ import { buildAnalysis } from "@/lib/scoring";
 import { checkRateLimit, clientIpFrom } from "@/lib/rateLimit";
 import { logger, requestId } from "@/lib/logger";
 import { errorMessage } from "@/lib/http";
+import { isValidTicker, normalizeTicker } from "@/lib/ticker";
+import type { AnnualPoint } from "@/lib/types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,9 +18,9 @@ export async function GET(
   const rid = requestId();
   const started = Date.now();
   const { ticker: raw } = await params;
-  const ticker = (raw || "").trim().toUpperCase();
+  const ticker = normalizeTicker(raw || "");
 
-  if (!/^[A-Z0-9.\-]{1,12}$/.test(ticker)) {
+  if (!isValidTicker(ticker)) {
     return NextResponse.json({ error: "טיקר לא תקין" }, { status: 400 });
   }
 
@@ -40,13 +42,35 @@ export async function GET(
   logger.info("analyze request start", { rid, ticker, ip });
 
   try {
-    const resolved = await resolveTicker(ticker);
+    // SEC EDGAR only covers US-reporting issuers. A ticker not found there
+    // isn't necessarily invalid — it may be a foreign-listed company (e.g. a
+    // Tel Aviv Stock Exchange ticker like TEVA.TA or POLI.TA) that simply
+    // doesn't file with the SEC. We degrade to market-data-only in that case
+    // instead of failing the whole request.
+    let resolved: { cik: string; name: string } | null = null;
+    try {
+      resolved = await resolveTicker(ticker);
+    } catch (e: unknown) {
+      if (errorMessage(e) !== "TICKER_NOT_FOUND") throw e;
+      resolved = null;
+    }
 
     const [sec, filing, market] = await Promise.all([
-      getSecFinancials(resolved.cik),
-      getLatestAnnualFiling(resolved.cik),
+      resolved
+        ? getSecFinancials(resolved.cik)
+        : Promise.resolve({ entityName: undefined as string | undefined, annual: [] as AnnualPoint[] }),
+      resolved ? getLatestAnnualFiling(resolved.cik) : Promise.resolve(null),
       getYahooMarket(ticker)
     ]);
+
+    // Neither SEC nor Yahoo has anything on this symbol — it's genuinely unknown.
+    if (!resolved && market.price === undefined && market.marketCap === undefined && market.name === ticker) {
+      logger.info("analyze request: ticker not found anywhere", { rid, ticker });
+      return NextResponse.json(
+        { error: "לא נמצא מידע על הטיקר הזה — לא ב-SEC EDGAR ולא ב-Yahoo Finance." },
+        { status: 404 }
+      );
+    }
 
     const [customer, peers, history] = await Promise.all([
       filing ? analyzeFilingText(filing.url).catch(() => ({ found: false as const })) : Promise.resolve({ found: false as const }),
@@ -81,7 +105,7 @@ export async function GET(
 
     const analysis = buildAnalysis({
       ticker,
-      companyName: market.name || sec.entityName || resolved.name,
+      companyName: market.name || sec.entityName || resolved?.name || ticker,
       sector: market.sector,
       industry: market.industry,
       price: market.price,
@@ -94,19 +118,16 @@ export async function GET(
       customerConcentration: customer,
       peers,
       valuationHistory,
-      latestFilingUrl: filing?.url
+      latestFilingUrl: filing?.url,
+      secFilingsAvailable: Boolean(resolved)
     });
 
-    logger.info("analyze request done", { rid, ticker, ms: Date.now() - started });
+    logger.info("analyze request done", { rid, ticker, ms: Date.now() - started, secFilingsAvailable: Boolean(resolved) });
     return NextResponse.json(analysis, {
       headers: { "X-Request-Id": rid }
     });
   } catch (e: unknown) {
     const message = errorMessage(e);
-    if (message === "TICKER_NOT_FOUND") {
-      logger.info("analyze request: ticker not found", { rid, ticker });
-      return NextResponse.json({ error: "הטיקר לא נמצא במאגר החברות של SEC." }, { status: 404 });
-    }
     logger.error("analyze request failed", { rid, ticker, ms: Date.now() - started, error: message });
     return NextResponse.json({
       error: "אירעה שגיאה בקבלת הנתונים. נסה שוב בעוד רגע.",

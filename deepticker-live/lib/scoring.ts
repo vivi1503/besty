@@ -1,4 +1,9 @@
-import type { AnnualPoint, AnalysisResponse, PeerMetric, RuleResult, Status } from "./types";
+import type { AnnualPoint, AnalysisResponse, FinalVerdict, PeerMetric, RuleResult, Status } from "./types";
+
+/** Minimum overall score (out of 100) to consider the company a "yes" against the defined criteria. */
+const YES_SCORE_THRESHOLD = 70;
+/** Below this confidence (% of rules that could actually be evaluated), the data is too thin to decide either way. */
+const MIN_CONFIDENCE_FOR_DECISION = 40;
 
 const growth = (a?: number, b?: number) =>
   a !== undefined && b !== undefined && b !== 0 ? (a / b - 1) * 100 : undefined;
@@ -35,6 +40,7 @@ export function buildAnalysis(input: {
   peers: PeerMetric[];
   valuationHistory: { year: number; pe?: number }[];
   latestFilingUrl?: string;
+  secFilingsAvailable?: boolean;
 }): AnalysisResponse {
   const annual = [...input.annual].sort((a,b) => a.year-b.year);
   const latest = annual.at(-1);
@@ -280,6 +286,37 @@ export function buildAnalysis(input: {
     overallScore >= 80 ? "איכות גבוהה" :
     overallScore >= 60 ? "דורש זהירות" : "סיכון גבוה";
 
+  const criticalRedFlags = redFlags.filter(r => r.critical);
+  let finalVerdict: FinalVerdict;
+  if (overallScore === null || confidence < MIN_CONFIDENCE_FOR_DECISION) {
+    finalVerdict = {
+      decision: "insufficient",
+      label: "אין מספיק מידע להכרעה",
+      reasoning: overallScore === null
+        ? "לא ניתן היה לחשב ציון כולל — חסרים נתונים שנתיים ברי-בדיקה מ-SEC ומ-Yahoo Finance עבור טיקר זה."
+        : `רמת הביטחון בנתונים (${confidence}%) נמוכה מסף ${MIN_CONFIDENCE_FOR_DECISION}% הנדרש כדי לקבוע מסקנה חד-משמעית לפי הקריטריונים שהוגדרו.`
+    };
+  } else if (overallScore >= YES_SCORE_THRESHOLD && criticalRedFlags.length === 0) {
+    finalVerdict = {
+      decision: "yes",
+      label: "כן — עומדת בקריטריונים שהוגדרו",
+      reasoning: `הציון הכולל (${Math.round(overallScore)}/100) מעל סף ${YES_SCORE_THRESHOLD}, ולא זוהו דגלים אדומים קריטיים מבין ${evaluable} הכללים שניתן היה לבדוק בפועל (רמת ביטחון ${confidence}%).`
+    };
+  } else {
+    const reasons: string[] = [];
+    if (overallScore < YES_SCORE_THRESHOLD) {
+      reasons.push(`הציון הכולל (${Math.round(overallScore)}/100) נמוך מסף ${YES_SCORE_THRESHOLD} שהוגדר`);
+    }
+    if (criticalRedFlags.length > 0) {
+      reasons.push(`זוהו ${criticalRedFlags.length} דגל/י אדום קריטי: ${criticalRedFlags.map(r => r.title).join(", ")}`);
+    }
+    finalVerdict = {
+      decision: "no",
+      label: "לא — אינה עומדת בקריטריונים שהוגדרו",
+      reasoning: `${reasons.join("; ")} (רמת ביטחון ${confidence}%).`
+    };
+  }
+
   return {
     ticker: input.ticker,
     companyName: input.companyName,
@@ -304,6 +341,8 @@ export function buildAnalysis(input: {
     redFlags,
     positives,
     verdict,
+    finalVerdict,
+    secFilingsAvailable: input.secFilingsAvailable ?? annual.length > 0,
     sources: ["SEC EDGAR", "Yahoo Finance (unofficial)", "Calculated"]
   };
 }
