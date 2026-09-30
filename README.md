@@ -59,7 +59,7 @@ Supported image types: `.jpg`, `.jpeg`, `.png`, `.bmp`, `.webp`, `.tif`,
 
 # Heshbonit — Promo Motion Video
 
-`promo/` contains a 20-second vertical (1080×1920, 30 fps) motion-graphics ad
+`promo/` contains a 25-second vertical (1080×1920, 30 fps) motion-graphics ad
 for [heshbonit.org](http://heshbonit.org), sized for Reels, TikTok and Stories.
 
 - `promo/heshbonit_promo.mp4` — the rendered video.

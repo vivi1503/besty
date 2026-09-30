@@ -7,85 +7,108 @@
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=block" rel="stylesheet">
 <style>
   :root {
-    --navy: #0b1b3f;
-    --navy-2: #13295c;
-    --mint: #19d3a2;
-    --mint-dark: #0ea882;
-    --sky: #5b8cff;
+    --bg: #0b0716;
+    --bg-2: #1a1036;
+    --purple: #7b2ff7;
+    --pink: #e83cf0;
+    --blue: #3a6ff0;
+    --grad: linear-gradient(90deg, var(--purple), var(--pink));
+    --grad-text: linear-gradient(90deg, var(--blue), var(--purple) 45%, var(--pink));
     --paper: #ffffff;
-    --ink: #0b1b3f;
-    --muted: #6b7a99;
+    --ink: #0d0b1a;
+    --muted: #6d6a85;
+    --soft: #c9c2e6;
+    --green: #16a34a;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--navy); }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
   body { font-family: 'Heebo', sans-serif; color: #fff; position: relative; }
   .abs { position: absolute; }
-  .center { left: 50%; top: 50%; transform: translate(-50%, -50%); }
+  .gt { background: var(--grad-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .emoji { font-family: 'Noto Color Emoji'; }
   #stage { position: absolute; inset: 0; overflow: hidden; }
 
   /* background */
-  #bg { position: absolute; inset: 0; background: radial-gradient(120% 80% at 50% 0%, var(--navy-2), var(--navy)); }
-  .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .55; }
-  #blob1 { width: 700px; height: 700px; background: var(--mint); }
-  #blob2 { width: 800px; height: 800px; background: var(--sky); }
-  #wipe { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--mint);
+  #bg { position: absolute; inset: 0; background: radial-gradient(120% 80% at 50% 0%, var(--bg-2), var(--bg)); }
+  .blob { position: absolute; border-radius: 50%; filter: blur(100px); opacity: .5; }
+  #blob1 { width: 700px; height: 700px; background: var(--purple); }
+  #blob2 { width: 800px; height: 800px; background: var(--pink); opacity: .35; }
+  #wipe { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--grad);
           left: 540px; top: 960px; transform: translate(-50%, -50%) scale(0); }
 
+  /* logo mark (recreation of the site icon) */
+  .logo { border-radius: 26%; background: #0d0b1a; display: flex; align-items: center; justify-content: center;
+          box-shadow: 0 30px 70px rgba(0,0,0,.35), inset 0 0 0 3px rgba(255,255,255,.08); }
+
   /* scene 1: paper chaos */
-  .sheet { position: absolute; width: 260px; height: 340px; background: #f4f6fb; border-radius: 14px;
-           box-shadow: 0 20px 50px rgba(0,0,0,.35); padding: 36px 30px; }
-  .sheet i { display: block; height: 14px; border-radius: 7px; background: #cfd6e6; margin-bottom: 20px; }
+  .sheet { position: absolute; left: 0; top: 0; width: 260px; height: 340px; background: #f4f3fb; border-radius: 14px;
+           box-shadow: 0 20px 50px rgba(0,0,0,.4); padding: 36px 30px; }
+  .sheet i { display: block; height: 14px; border-radius: 7px; background: #d4cfe6; margin-bottom: 20px; }
   .sheet i:nth-child(2) { width: 70%; } .sheet i:nth-child(4) { width: 55%; } .sheet i:nth-child(5) { width: 80%; }
-  #q1 { width: 900px; left: 90px; top: 1380px; text-align: center; font-size: 92px; font-weight: 900; line-height: 1.15; }
+  #q1 { width: 960px; left: 60px; top: 1360px; text-align: center; font-size: 100px; font-weight: 900; line-height: 1.15; }
   #q1 span { display: inline-block; margin: 0 10px; }
 
   /* scene 2: logo */
-  #logoWrap { width: 1080px; left: 0; top: 620px; text-align: center; }
-  #logoIcon { width: 260px; height: 260px; margin: 0 auto; border-radius: 64px; background: var(--navy);
-              display: flex; align-items: center; justify-content: center; box-shadow: 0 30px 70px rgba(11,27,63,.35); }
-  #wordmark { font-size: 170px; font-weight: 900; color: var(--navy); margin-top: 40px; letter-spacing: -2px; }
-  #tagline { font-size: 56px; font-weight: 500; color: var(--navy); margin-top: 10px; }
+  #logoWrap { width: 1080px; left: 0; top: 560px; text-align: center; }
+  #logoWrap .logo { width: 280px; height: 280px; margin: 0 auto; }
+  #headline { font-size: 132px; font-weight: 900; margin-top: 70px; line-height: 1.08; letter-spacing: -1px; }
+  #headline span { display: block; }
+  #siteName { display: inline-block; margin-top: 50px; font-size: 54px; font-weight: 700; direction: ltr;
+              padding: 16px 50px; border-radius: 60px; background: rgba(13,11,26,.25); }
 
   /* scene 3: invoice */
-  #s3title { width: 1080px; left: 0; top: 230px; text-align: center; font-size: 84px; font-weight: 900; line-height: 1.15; }
-  #s3title b { color: var(--mint); }
+  #s3title { width: 1080px; left: 0; top: 210px; text-align: center; font-size: 80px; font-weight: 900; line-height: 1.15; }
   #invoice { width: 820px; left: 130px; top: 560px; background: var(--paper); border-radius: 36px; color: var(--ink);
-             padding: 60px 60px 50px; box-shadow: 0 40px 90px rgba(0,0,0,.4); }
-  #invHead { display: flex; justify-content: space-between; align-items: center; padding-bottom: 30px; border-bottom: 3px solid #eef1f7; }
+             padding: 60px 60px 50px; box-shadow: 0 40px 90px rgba(0,0,0,.45); }
+  #invHead { display: flex; justify-content: space-between; align-items: center; padding-bottom: 30px; border-bottom: 3px solid #efedf7; }
   #invHead .t { font-size: 52px; font-weight: 800; }
   #invHead .n { font-size: 36px; color: var(--muted); font-weight: 500; direction: ltr; }
   #invTo { font-size: 34px; color: var(--muted); margin: 26px 0 16px; }
-  .row { display: flex; justify-content: space-between; font-size: 42px; padding: 22px 0; border-bottom: 2px dashed #e4e8f1; }
+  .row { display: flex; justify-content: space-between; font-size: 42px; padding: 22px 0; border-bottom: 2px dashed #e6e3f0; }
   .row .p { font-weight: 700; direction: ltr; }
   #total { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; font-size: 50px; font-weight: 900; }
-  #totalNum { color: var(--mint-dark); direction: ltr; font-size: 64px; }
-  #sendBtn { margin-top: 44px; height: 120px; border-radius: 60px; background: var(--mint); color: var(--navy);
-             display: flex; align-items: center; justify-content: center; gap: 20px; font-size: 50px; font-weight: 900; }
-  #cursor { width: 70px; height: 70px; border-radius: 50%; background: rgba(255,255,255,.9); border: 6px solid var(--navy);
+  #totalNum { direction: ltr; font-size: 64px; }
+  #sendBtn { margin-top: 44px; height: 120px; border-radius: 60px; background: var(--grad); color: #fff;
+             display: flex; align-items: center; justify-content: center; gap: 20px; font-size: 50px; font-weight: 900;
+             box-shadow: 0 16px 40px rgba(123,47,247,.35); }
+  #cursor { left: 0; top: 0; width: 70px; height: 70px; border-radius: 50%; background: rgba(255,255,255,.92); border: 6px solid var(--ink);
             box-shadow: 0 10px 30px rgba(0,0,0,.3); }
-  #sent { width: 1080px; left: 0; top: 820px; text-align: center; }
-  #sentCircle { width: 300px; height: 300px; border-radius: 50%; background: var(--mint); margin: 0 auto;
-                display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 30px rgba(25,211,162,.18); }
+  #sent { width: 1080px; left: 0; top: 800px; text-align: center; }
+  #sentCircle { width: 300px; height: 300px; border-radius: 50%; background: var(--grad); margin: 0 auto;
+                display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 30px rgba(232,60,240,.15); }
   #sentText { font-size: 80px; font-weight: 900; margin-top: 60px; }
 
-  /* scene 4: benefits */
-  #s4title { width: 1080px; left: 0; top: 330px; text-align: center; font-size: 96px; font-weight: 900; }
-  .benefit { width: 880px; left: 100px; height: 230px; background: rgba(255,255,255,.08); border: 2px solid rgba(255,255,255,.16);
-             border-radius: 40px; display: flex; align-items: center; gap: 44px; padding: 0 50px; }
-  .benefit .ic { width: 140px; height: 140px; flex: none; border-radius: 36px; background: var(--mint);
-                 display: flex; align-items: center; justify-content: center; }
-  .benefit h3 { font-size: 60px; font-weight: 800; }
-  .benefit p { font-size: 38px; color: #b9c5e4; margin-top: 4px; }
+  /* scene 4: features */
+  #s4title { width: 1080px; left: 0; top: 280px; text-align: center; font-size: 104px; font-weight: 900; }
+  #s4sub { width: 1080px; left: 0; top: 420px; text-align: center; font-size: 44px; color: var(--soft); }
+  .feat { width: 900px; left: 90px; height: 200px; background: rgba(255,255,255,.07); border: 2px solid rgba(255,255,255,.14);
+          border-radius: 40px; display: flex; align-items: center; gap: 44px; padding: 0 44px; }
+  .feat .ic { width: 124px; height: 124px; flex: none; border-radius: 32px; background: var(--grad);
+              display: flex; align-items: center; justify-content: center; }
+  .feat h3 { font-size: 56px; font-weight: 800; }
+  .feat p { font-size: 36px; color: var(--soft); margin-top: 2px; }
 
-  /* scene 5: CTA */
-  #cta { width: 1080px; left: 0; top: 560px; text-align: center; }
-  #ctaIcon { width: 200px; height: 200px; margin: 0 auto; border-radius: 52px; background: var(--mint);
-             display: flex; align-items: center; justify-content: center; }
-  #ctaHead { font-size: 130px; font-weight: 900; margin-top: 70px; line-height: 1.05; }
-  #ctaSub { font-size: 52px; color: #b9c5e4; margin-top: 30px; }
-  #url { display: inline-block; margin-top: 90px; padding: 40px 90px; border-radius: 100px; background: var(--mint);
-         color: var(--navy); font-size: 80px; font-weight: 900; direction: ltr; letter-spacing: 1px; }
-  #urlRing { position: absolute; left: 50%; border-radius: 120px; border: 6px solid var(--mint); }
+  /* scene 5: price */
+  #price { width: 1080px; left: 0; top: 380px; text-align: center; }
+  #badge { display: inline-block; padding: 22px 56px; border-radius: 60px; background: var(--grad); font-size: 46px; font-weight: 800;
+           box-shadow: 0 16px 50px rgba(232,60,240,.35); }
+  #priceLine { margin-top: 70px; display: flex; justify-content: center; align-items: baseline; gap: 30px; }
+  #priceNum { font-size: 330px; font-weight: 900; line-height: 1; direction: ltr; letter-spacing: -6px; }
+  #perMonth { font-size: 70px; font-weight: 800; }
+  #priceSub { font-size: 50px; color: var(--soft); margin-top: 30px; }
+  .chip { display: flex; align-items: center; justify-content: center; gap: 24px; width: 820px; margin: 0 auto; height: 150px;
+          border-radius: 75px; background: #fff; color: var(--ink); font-size: 56px; font-weight: 900; }
+  #chips { margin-top: 90px; display: flex; flex-direction: column; gap: 36px; }
+
+  /* scene 6: CTA */
+  #cta { width: 1080px; left: 0; top: 500px; text-align: center; }
+  #cta .logo { width: 210px; height: 210px; margin: 0 auto; }
+  #ctaHead { font-size: 124px; font-weight: 900; margin-top: 70px; line-height: 1.08; }
+  #ctaBtn { display: inline-flex; align-items: center; gap: 26px; margin-top: 80px; padding: 42px 90px; border-radius: 100px;
+            background: var(--grad); font-size: 66px; font-weight: 900; box-shadow: 0 20px 60px rgba(123,47,247,.45); }
+  #urlWrap { position: relative; display: inline-block; margin-top: 60px; }
+  #url { font-size: 74px; font-weight: 800; direction: ltr; letter-spacing: 1px; }
+  #ctaFoot { font-size: 40px; color: var(--soft); margin-top: 30px; }
 </style>
 </head>
 <body>
@@ -108,9 +131,9 @@
 
   <!-- Scene 2 -->
   <div class="abs" id="logoWrap">
-    <div id="logoIcon"><svg width="150" height="150" viewBox="0 0 24 24" fill="none" stroke="#19d3a2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15l-2.5-1.5L15 22l-2.5-1.5L10 22l-2.5-1.5L5 22V3a1 1 0 0 1 1-1z"/><path d="M14 2v6h6"/><path d="M9 12h6M9 16h4"/></svg></div>
-    <div id="wordmark"></div>
-    <div id="tagline"></div>
+    <div class="logo" id="logo1"></div>
+    <div id="headline"></div>
+    <div id="siteName"></div>
   </div>
 
   <!-- Scene 3 -->
@@ -119,25 +142,35 @@
     <div id="invHead"><div class="t" id="invT"></div><div class="n" id="invN"></div></div>
     <div id="invTo"></div>
     <div id="rows"></div>
-    <div id="total"><span id="totalLbl"></span><span id="totalNum"></span></div>
-    <div id="sendBtn"><span id="sendLbl"></span><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#0b1b3f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg></div>
+    <div id="total"><span id="totalLbl"></span><span id="totalNum" class="gt"></span></div>
+    <div id="sendBtn"><span id="sendLbl"></span><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg></div>
   </div>
   <div class="abs" id="cursor"></div>
   <div class="abs" id="sent">
-    <div id="sentCircle"><svg width="170" height="170" viewBox="0 0 24 24" fill="none" stroke="#0b1b3f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path id="checkPath" d="M5 12.5l4.5 4.5L19 7.5" stroke-dasharray="22" stroke-dashoffset="22"/></svg></div>
+    <div id="sentCircle"><svg width="170" height="170" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path id="checkPath" d="M5 12.5l4.5 4.5L19 7.5" stroke-dasharray="22" stroke-dashoffset="22"/></svg></div>
     <div id="sentText"></div>
   </div>
 
   <!-- Scene 4 -->
   <div class="abs" id="s4title"></div>
-  <div id="benefits"></div>
+  <div class="abs" id="s4sub"></div>
+  <div id="feats"></div>
 
   <!-- Scene 5 -->
+  <div class="abs" id="price">
+    <div id="badge"></div>
+    <div id="priceLine"><span id="priceNum" class="gt"></span><span id="perMonth"></span></div>
+    <div id="priceSub"></div>
+    <div id="chips"></div>
+  </div>
+
+  <!-- Scene 6 -->
   <div class="abs" id="cta">
-    <div id="ctaIcon"><svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#0b1b3f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15l-2.5-1.5L15 22l-2.5-1.5L10 22l-2.5-1.5L5 22V3a1 1 0 0 1 1-1z"/><path d="M14 2v6h6"/><path d="M9 12h6M9 16h4"/></svg></div>
+    <div class="logo" id="logo2"></div>
     <div id="ctaHead"></div>
-    <div id="ctaSub"></div>
-    <div style="position:relative;display:inline-block"><div id="urlRing"></div><div id="url"></div></div>
+    <div id="ctaBtn"></div><br>
+    <div id="urlWrap"><div id="url" class="gt"></div></div>
+    <div id="ctaFoot"></div>
   </div>
 </div>
 
@@ -146,10 +179,10 @@
    EDIT YOUR TEXT HERE — everything the viewer reads lives in CONFIG.
    ============================================================ */
 const CONFIG = {
-  question: ['עדיין', 'מבזבזים', 'שעות', 'על', 'ניירת?'],
-  brand: 'חשבונית',
-  tagline: 'חשבוניות דיגיטליות — פשוט, מהיר, מקצועי',
-  s3title: 'חשבונית מוכנה<br><b>בכמה קליקים</b>',
+  question: ['עדיין', 'רודפים', 'אחרי', 'ניירת?'],
+  headline: ['כל העסק שלך.', 'במקום אחד.'],
+  site: 'heshbonit.org',
+  s3title: 'הצעת מחיר, חשבונית וקבלה<br><span class="gt">בכמה קליקים</span>',
   invoiceTitle: 'חשבונית',
   invoiceNumber: '#1024',
   invoiceTo: 'לכבוד: סטודיו אור בע״מ',
@@ -161,17 +194,27 @@ const CONFIG = {
   totalLabel: 'סה״כ לתשלום',
   sendLabel: 'שליחה ללקוח',
   sentText: 'נשלחה ללקוח!',
-  s4title: 'למה חשבונית?',
-  benefits: [
-    ['bolt', 'מהיר', 'חשבונית מוכנה תוך שניות'],
-    ['send', 'ישר ללקוח', 'שליחה במייל או בוואטסאפ'],
-    ['folder', 'הכל מסודר', 'כל המסמכים במקום אחד'],
+  s4title: 'הכל כלול.',
+  s4sub: 'מערכת אחת שמנהלת לך את העסק',
+  features: [
+    ['receipt', 'חשבוניות וקבלות', 'הצעות מחיר עם חתימה דיגיטלית'],
+    ['truck', 'ניהול צי רכבים', 'כל הרכבים של העסק במקום אחד'],
+    ['users', 'ניהול ספקים', 'ספקים, הוצאות ותשלומים — מסודר'],
+    ['chart', 'מעקב דוחות לרו״ח', 'דוחות מוכנים לרואה החשבון'],
   ],
-  ctaHead: 'התחילו<br>עוד היום',
-  ctaSub: 'והפסיקו לרדוף אחרי ניירת',
-  url: 'heshbonit.org',
+  badge: 'החודש הראשון — חינם לגמרי',
+  price: 30,
+  perMonth: 'לחודש',
+  priceSub: 'הכל כלול. מבטלים בלחיצה, מתי שרוצים.',
+  chips: [
+    ['check', 'בלי אותיות קטנות'],
+    ['check', 'ללא עליית מחירים <span class="emoji">🚀</span>'],
+  ],
+  ctaHead: 'כל העסק שלך.<br><span class="gt">במקום אחד.</span>',
+  ctaBtn: 'מתחילים חודש חינם',
+  ctaFoot: 'בלי כרטיס אשראי בהרשמה',
 };
-const DURATION = 20; // seconds
+const DURATION = 25; // seconds
 
 /* ---------- helpers ---------- */
 const $ = id => document.getElementById(id);
@@ -184,19 +227,31 @@ const eInOut = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
 const eBack = p => { const c = 1.9; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
 const shekel = n => '₪' + Math.round(n).toLocaleString('en-US');
 const show = (el, o) => { el.style.opacity = o; el.style.visibility = o <= 0.001 ? 'hidden' : 'visible'; };
-// fade window: fully visible between (a+fi) and (b-fo)
-const win = (t, a, b, fi = .3, fo = .3) => Math.min(prog(t, a, fi), 1 - prog(t, b - fo, fo));
+const svg = (paths, size, stroke = '#fff', w = 2.2) =>
+  `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
 
 const ICONS = {
-  bolt: '<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>',
-  send: '<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/>',
-  folder: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M8 13h8"/>',
+  receipt: '<path d="M6 2h9l5 5v15l-2.5-1.5L15 22l-2.5-1.5L10 22l-2.5-1.5L5 22V3a1 1 0 0 1 1-1z"/><path d="M14 2v6h6"/><path d="M9 12h6M9 16h4"/>',
+  truck: '<path d="M2 6h11v10H2z"/><path d="M13 9h4l4 4v3h-8z"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>',
+  users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7"/><path d="M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/>',
+  chart: '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-6"/><path d="M16 8h4v4"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
 };
+
+// Stylised "H" mark modelled on the site icon: gradient left stem + slash, white right stem.
+const LOGO = s => `<svg width="${s}" height="${s}" viewBox="0 0 100 100">
+  <defs><linearGradient id="lg${s}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7b2ff7"/><stop offset="1" stop-color="#e83cf0"/></linearGradient></defs>
+  <path d="M22 14h16l-6 72H16z" fill="url(#lg${s})"/>
+  <path d="M62 14h18l-4 72H60z" fill="#f4efe6"/>
+  <path d="M28 58 70 30v14L26 72z" fill="url(#lg${s})"/>
+</svg>`;
 
 /* ---------- build DOM from CONFIG ---------- */
 $('q1').innerHTML = CONFIG.question.map(w => `<span>${w}</span>`).join(' ');
-$('wordmark').textContent = CONFIG.brand;
-$('tagline').textContent = CONFIG.tagline;
+$('logo1').innerHTML = LOGO(190);
+$('logo2').innerHTML = LOGO(140);
+$('headline').innerHTML = CONFIG.headline.map(l => `<span>${l}</span>`).join('');
+$('siteName').textContent = CONFIG.site;
 $('s3title').innerHTML = CONFIG.s3title;
 $('invT').textContent = CONFIG.invoiceTitle;
 $('invN').textContent = CONFIG.invoiceNumber;
@@ -207,11 +262,18 @@ $('totalLbl').textContent = CONFIG.totalLabel;
 $('sendLbl').textContent = CONFIG.sendLabel;
 $('sentText').textContent = CONFIG.sentText;
 $('s4title').textContent = CONFIG.s4title;
-$('benefits').innerHTML = CONFIG.benefits.map(([ic, h, p], i) =>
-  `<div class="abs benefit" style="top:${640 + i * 290}px"><div class="ic"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#0b1b3f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${ICONS[ic]}</svg></div><div><h3>${h}</h3><p>${p}</p></div></div>`).join('');
+$('s4sub').textContent = CONFIG.s4sub;
+$('feats').innerHTML = CONFIG.features.map(([ic, h, p], i) =>
+  `<div class="abs feat" style="top:${560 + i * 240}px"><div class="ic">${svg(ICONS[ic], 72)}</div><div><h3>${h}</h3><p>${p}</p></div></div>`).join('');
+$('badge').textContent = CONFIG.badge;
+$('perMonth').textContent = CONFIG.perMonth;
+$('priceSub').textContent = CONFIG.priceSub;
+$('chips').innerHTML = CONFIG.chips.map(([ic, txt]) =>
+  `<div class="chip">${svg(ICONS[ic], 60, 'var(--green)', 3.2)}<span>${txt}</span></div>`).join('');
 $('ctaHead').innerHTML = CONFIG.ctaHead;
-$('ctaSub').textContent = CONFIG.ctaSub;
-$('url').textContent = CONFIG.url;
+$('ctaBtn').innerHTML = `<span>${CONFIG.ctaBtn}</span>${svg('<path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/>', 64, '#fff', 2.8)}`;
+$('url').textContent = CONFIG.site;
+$('ctaFoot').textContent = CONFIG.ctaFoot;
 
 const TOTAL = CONFIG.items.reduce((s, [, p]) => s + p, 0);
 const SHEETS = [
@@ -233,30 +295,29 @@ function seek(t) {
     const wob = Math.sin(t * 2 + i) * 4;
     const y = lerp(-500, s.y, pin) + s1out * (900 + i * 120);
     el.style.transform = `translate(${s.x}px, ${y}px) rotate(${s.r * pin + wob + s1out * s.r * 3}deg)`;
-    el.style.left = '0'; el.style.top = '0';
     show(el, pin * (1 - s1out));
   });
   [...$('q1').children].forEach((w, i) => {
-    const p = eBack(prog(t, .6 + i * .22, .45));
+    const p = eBack(prog(t, .6 + i * .25, .45));
     w.style.transform = `translateY(${(1 - p) * 80}px) scale(${.6 + .4 * p})`;
     w.style.opacity = clamp(p) * (1 - s1out);
   });
   show($('s1'), t < 3.5 ? 1 : 0);
 
-  /* Circle wipe into mint (3.2 – 3.9) and back out (6.4 – 7.0) */
+  /* Gradient circle wipe in (3.2 – 3.9) and out (6.4 – 7.0) */
   const wIn = eInOut(prog(t, 3.2, .7)), wOut = eInOut(prog(t, 6.4, .6));
   $('wipe').style.transform = `translate(-50%, -50%) scale(${wIn * 450})`;
   show($('wipe'), wIn > 0 && wOut < 1 ? 1 - wOut : 0);
 
-  /* Scene 2 (3.6 – 6.8): logo reveal */
+  /* Scene 2 (3.6 – 6.8): logo + headline */
   const ic = eBack(prog(t, 3.7, .6));
-  $('logoIcon').style.transform = `scale(${ic}) rotate(${(1 - ic) * -30}deg)`;
-  const wm = eOut(prog(t, 4.1, .6));
-  $('wordmark').style.transform = `translateY(${(1 - wm) * 60}px)`;
-  $('wordmark').style.opacity = wm;
-  const tg = eOut(prog(t, 4.6, .6));
-  $('tagline').style.transform = `translateY(${(1 - tg) * 40}px)`;
-  $('tagline').style.opacity = tg;
+  $('logo1').style.transform = `scale(${ic}) rotate(${(1 - ic) * -30}deg)`;
+  [...$('headline').children].forEach((l, i) => {
+    const p = eOut(prog(t, 4.1 + i * .3, .6));
+    l.style.opacity = p; l.style.transform = `translateY(${(1 - p) * 60}px)`;
+  });
+  const sn = eBack(prog(t, 4.9, .5));
+  $('siteName').style.transform = `scale(${sn})`;
   const s2out = eIn(prog(t, 6.3, .45));
   $('logoWrap').style.transform = `scale(${1 - s2out * .2})`;
   show($('logoWrap'), t >= 3.6 ? 1 - s2out : 0);
@@ -272,8 +333,7 @@ function seek(t) {
     const p = eOut(prog(t, 7.6 + i * .45, .45));
     r.style.opacity = p; r.style.transform = `translateX(${(1 - p) * -80}px)`;
   });
-  const tp = eOut(prog(t, 8.9, 1.1));
-  $('totalNum').textContent = shekel(TOTAL * tp);
+  $('totalNum').textContent = shekel(TOTAL * eOut(prog(t, 8.9, 1.1)));
   $('total').style.opacity = prog(t, 8.8, .3);
   const btnIn = eBack(prog(t, 9.4, .45));
   const press = Math.sin(Math.PI * prog(t, 10.55, .3));
@@ -281,43 +341,57 @@ function seek(t) {
   // cursor travels to the button and clicks
   const cm = eInOut(prog(t, 9.8, .75));
   $('cursor').style.transform = `translate(${lerp(900, 505, cm)}px, ${lerp(1750, 1250, cm)}px) scale(${1 - press * .25})`;
-  $('cursor').style.left = '0'; $('cursor').style.top = '0';
   show($('cursor'), prog(t, 9.8, .2) * (1 - prog(t, 10.9, .2)));
   // "sent" confirmation
-  const sc = eBack(prog(t, 11.4, .5));
-  $('sentCircle').style.transform = `scale(${sc})`;
+  $('sentCircle').style.transform = `scale(${eBack(prog(t, 11.4, .5))})`;
   $('checkPath').setAttribute('stroke-dashoffset', 22 * (1 - eOut(prog(t, 11.7, .45))));
   const st = eOut(prog(t, 11.9, .5));
   $('sentText').style.opacity = st; $('sentText').style.transform = `translateY(${(1 - st) * 50}px)`;
   show($('sent'), t >= 11.3 ? 1 - eIn(prog(t, 12.9, .4)) : 0);
 
-  /* Scene 4 (13.3 – 16.9): benefits */
-  const s4t = eOut(prog(t, 13.3, .5)), s4out = eIn(prog(t, 16.5, .45));
+  /* Scene 4 (13.3 – 17.6): everything included */
+  const s4t = eOut(prog(t, 13.3, .5)), s4out = eIn(prog(t, 17.2, .45));
   $('s4title').style.transform = `scale(${.8 + .2 * s4t})`;
   show($('s4title'), s4t * (1 - s4out));
-  [...$('benefits').children].forEach((b, i) => {
-    const p = eBack(prog(t, 13.7 + i * .35, .55));
-    const icp = eBack(prog(t, 13.95 + i * .35, .5));
+  const s4s = eOut(prog(t, 13.6, .5));
+  $('s4sub').style.transform = `translateY(${(1 - s4s) * 30}px)`;
+  show($('s4sub'), s4s * (1 - s4out));
+  [...$('feats').children].forEach((b, i) => {
+    const d = 13.9 + i * .4;
+    const p = eBack(prog(t, d, .55)), icp = eBack(prog(t, d + .25, .5));
     b.style.transform = `translateX(${(1 - p) * 1100 - s4out * (1100 + i * 150)}px)`;
     b.querySelector('.ic').style.transform = `scale(${icp}) rotate(${(1 - icp) * 90}deg)`;
-    show(b, prog(t, 13.7 + i * .35, .15) * (1 - s4out));
+    show(b, prog(t, d, .15) * (1 - s4out));
   });
 
-  /* Scene 5 (16.9 – 20): CTA */
-  const c1 = eBack(prog(t, 16.95, .55)), c2 = eOut(prog(t, 17.25, .6)), c3 = eOut(prog(t, 17.6, .5)), c4 = eBack(prog(t, 17.9, .55));
-  $('ctaIcon').style.transform = `scale(${c1}) rotate(${(1 - c1) * 40}deg)`;
+  /* Scene 5 (17.7 – 21.8): price */
+  const b1 = eBack(prog(t, 17.7, .5));
+  $('badge').style.transform = `scale(${b1})`;
+  const pn = eBack(prog(t, 18.0, .6));
+  $('priceNum').textContent = '₪' + Math.round(CONFIG.price * eOut(prog(t, 18.0, .9)));
+  $('priceNum').style.transform = `scale(${.5 + .5 * pn})`;
+  const pm = eOut(prog(t, 18.5, .4));
+  $('perMonth').style.opacity = pm; $('perMonth').style.transform = `translateX(${(1 - pm) * 40}px)`;
+  const ps = eOut(prog(t, 18.8, .5));
+  $('priceSub').style.opacity = ps; $('priceSub').style.transform = `translateY(${(1 - ps) * 30}px)`;
+  [...$('chips').children].forEach((c, i) => {
+    const p = eBack(prog(t, 19.3 + i * .45, .5));
+    c.style.transform = `scale(${p})`;
+    c.style.opacity = prog(t, 19.3 + i * .45, .15);
+  });
+  const s5out = eIn(prog(t, 21.4, .4));
+  $('price').style.transform = `translateY(${-s5out * 120}px)`;
+  show($('price'), t >= 17.6 ? 1 - s5out : 0);
+
+  /* Scene 6 (21.8 – 25): CTA */
+  const c1 = eBack(prog(t, 21.85, .55)), c2 = eOut(prog(t, 22.1, .6)), c3 = eBack(prog(t, 22.5, .55)), c4 = eOut(prog(t, 22.9, .5));
+  $('logo2').style.transform = `scale(${c1}) rotate(${(1 - c1) * 40}deg)`;
   $('ctaHead').style.opacity = c2; $('ctaHead').style.transform = `translateY(${(1 - c2) * 70}px)`;
-  $('ctaSub').style.opacity = c3; $('ctaSub').style.transform = `translateY(${(1 - c3) * 40}px)`;
-  const pulse = t > 18.5 ? 1 + Math.sin((t - 18.5) * 5) * .035 : 1;
-  $('url').style.transform = `scale(${c4 * pulse})`;
-  const ring = ((t - 18.4) % 1.0 + 1) % 1.0;
-  const url = $('url');
-  const rw = url.offsetWidth, rh = url.offsetHeight;
-  $('urlRing').style.width = rw + 'px'; $('urlRing').style.height = rh + 'px';
-  $('urlRing').style.top = (url.offsetTop) + 'px';
-  $('urlRing').style.transform = `translateX(-50%) scale(${1 + ring * .35})`;
-  show($('urlRing'), t > 18.4 ? (1 - ring) * .8 : 0);
-  show($('cta'), t >= 16.9 ? 1 : 0);
+  const pulse = t > 23.3 ? 1 + Math.sin((t - 23.3) * 5) * .035 : 1;
+  $('ctaBtn').style.transform = `scale(${c3 * pulse})`;
+  $('urlWrap').style.opacity = c4; $('urlWrap').style.transform = `translateY(${(1 - c4) * 30}px)`;
+  $('ctaFoot').style.opacity = eOut(prog(t, 23.2, .5));
+  show($('cta'), t >= 21.8 ? 1 : 0);
 }
 
 window.seek = seek;
