@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>Yossi's Mess</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=block" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0716;
+    --bg-2: #1a1036;
+    --purple: #7b2ff7;
+    --pink: #e83cf0;
+    --blue: #3a6ff0;
+    --grad: linear-gradient(90deg, var(--purple), var(--pink));
+    --grad-text: linear-gradient(90deg, var(--blue), var(--purple) 45%, var(--pink));
+    --ink: #0d0b1a;
+    --soft: #c9c2e6;
+    --red: #ff4d6d;
+    --green: #16a34a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
+  body { font-family: 'Heebo', sans-serif; color: #fff; position: relative; }
+  .abs { position: absolute; }
+  .gt { background: var(--grad-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .emoji { font-family: 'Noto Color Emoji'; }
+  #stage { position: absolute; inset: 0; overflow: hidden; }
+  #bg { position: absolute; inset: 0; background: radial-gradient(120% 80% at 50% 0%, var(--bg-2), var(--bg)); }
+  #redGlow { position: absolute; inset: 0; background: radial-gradient(70% 50% at 50% 60%, rgba(255,77,109,.35), transparent 70%); }
+  .blob { position: absolute; border-radius: 50%; filter: blur(100px); }
+  #blob1 { width: 700px; height: 700px; background: var(--purple); opacity: .45; }
+  #blob2 { width: 800px; height: 800px; background: var(--pink); opacity: .3; }
+  #flash { position: absolute; inset: 0; background: #fff; }
+
+  .logo { border-radius: 22%; overflow: hidden; background: #0e0620;
+          box-shadow: 0 30px 70px rgba(0,0,0,.35), 0 0 60px rgba(232,60,240,.3); }
+  .logo img { width: 100%; height: 100%; display: block; }
+
+  /* captions */
+  .cap { width: 1000px; left: 40px; text-align: center; font-size: 96px; font-weight: 900; line-height: 1.12; }
+
+  /* character scene */
+  #world { position: absolute; inset: 0; transform-origin: 540px 1200px; }
+  #yossi { position: absolute; left: 0; top: 0; }
+  .sheet { position: absolute; left: 0; top: 0; width: 150px; height: 190px; background: #f4f3fb; border-radius: 10px;
+           box-shadow: 0 10px 24px rgba(0,0,0,.35); padding: 22px 18px; }
+  .sheet i { display: block; height: 9px; border-radius: 5px; background: #d4cfe6; margin-bottom: 13px; }
+  .sheet i:nth-child(2) { width: 70%; } .sheet i:nth-child(4) { width: 55%; }
+  .sheet b { position: absolute; left: 14px; bottom: 14px; font-size: 22px; color: var(--red); font-weight: 900; }
+
+  .bubble { left: 0; top: 0; padding: 26px 34px; border-radius: 34px; background: #fff; color: var(--ink);
+            font-size: 40px; font-weight: 800; display: flex; align-items: center; gap: 18px;
+            box-shadow: 0 18px 40px rgba(0,0,0,.35); border: 4px solid var(--red); white-space: nowrap; }
+  .bubble .who { font-size: 30px; color: var(--red); font-weight: 900; display: block; }
+  #okBubble { border-color: var(--green); }
+  #okBubble .who { color: var(--green); }
+
+  /* phone */
+  #phone { left: 330px; top: 0; width: 420px; height: 820px; border-radius: 64px; background: #111;
+           padding: 18px; box-shadow: 0 40px 100px rgba(0,0,0,.6), 0 0 0 4px #2a2440; }
+  #screen { width: 100%; height: 100%; border-radius: 48px; background: linear-gradient(160deg, #1a1036, #0b0716);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px; }
+  #screen .logo { width: 200px; height: 200px; }
+  #screen div.u { font-size: 40px; font-weight: 800; direction: ltr; }
+
+  /* organised cards */
+  .card { left: 0; top: 0; width: 460px; height: 230px; border-radius: 36px; background: rgba(255,255,255,.08);
+          border: 2px solid rgba(255,255,255,.16); display: flex; align-items: center; gap: 28px; padding: 0 32px; }
+  .card .ic { width: 110px; height: 110px; flex: none; border-radius: 30px; background: var(--grad);
+              display: flex; align-items: center; justify-content: center; }
+  .card h3 { font-size: 44px; font-weight: 800; line-height: 1.1; }
+  .card .ok { position: absolute; left: -16px; top: -16px; width: 64px; height: 64px; border-radius: 50%; background: var(--green);
+              display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(0,0,0,.3); }
+
+  /* price */
+  #price { width: 1080px; left: 0; top: 440px; text-align: center; }
+  #priceIntro { font-size: 70px; font-weight: 800; color: var(--soft); }
+  #priceLine { margin-top: 30px; display: flex; justify-content: center; align-items: baseline; gap: 30px; }
+  #priceNum { font-size: 330px; font-weight: 900; line-height: 1; direction: ltr; letter-spacing: -6px; }
+  #perMonth { font-size: 70px; font-weight: 800; }
+  #priceSub { font-size: 50px; color: var(--soft); margin-top: 30px; }
+  #chips { margin-top: 90px; display: flex; flex-direction: column; gap: 36px; }
+  .chip { display: flex; align-items: center; justify-content: center; gap: 24px; width: 820px; margin: 0 auto; height: 150px;
+          border-radius: 75px; background: #fff; color: var(--ink); font-size: 56px; font-weight: 900; }
+
+  /* CTA */
+  #cta { width: 1080px; left: 0; top: 480px; text-align: center; }
+  #cta .logo { width: 230px; height: 230px; margin: 0 auto; }
+  #ctaHead { font-size: 124px; font-weight: 900; margin-top: 70px; line-height: 1.08; }
+  #ctaBtn { display: inline-flex; align-items: center; gap: 26px; margin-top: 80px; padding: 42px 90px; border-radius: 100px;
+            background: var(--grad); font-size: 66px; font-weight: 900; box-shadow: 0 20px 60px rgba(123,47,247,.45); }
+  #urlWrap { display: inline-block; margin-top: 60px; }
+  #url { font-size: 74px; font-weight: 800; direction: ltr; letter-spacing: 1px; }
+  #ctaFoot { font-size: 40px; color: var(--soft); margin-top: 30px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"></div>
+  <div id="redGlow"></div>
+  <div class="blob" id="blob1"></div>
+  <div class="blob" id="blob2"></div>
+
+  <div id="world">
+    <!-- Yossi at his desk -->
+    <svg id="yossi" width="1080" height="1920" viewBox="0 0 1080 1920">
+      <defs>
+        <linearGradient id="deskG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d2156"/><stop offset="1" stop-color="#171031"/></linearGradient>
+      </defs>
+      <!-- relaxed arms (hands behind head) -->
+      <g id="armsRelax" stroke="#3a3f8f" stroke-width="58" stroke-linecap="round" fill="none">
+        <path d="M420 1190 L320 1040 L440 950"/>
+        <path d="M660 1190 L760 1040 L640 950"/>
+      </g>
+      <!-- body -->
+      <path d="M360 1460 L360 1250 Q360 1150 460 1140 L620 1140 Q720 1150 720 1250 L720 1460 Z" fill="#3a3f8f"/>
+      <path d="M500 1140 L540 1200 L580 1140 Z" fill="#f2c6a0"/>
+      <!-- neck + head -->
+      <rect x="505" y="1090" width="70" height="70" rx="20" fill="#e5b58e"/>
+      <g id="head">
+        <circle cx="540" cy="1000" r="125" fill="#f2c6a0"/>
+        <circle cx="415" cy="1010" r="22" fill="#e5b58e"/>
+        <circle cx="665" cy="1010" r="22" fill="#e5b58e"/>
+        <path d="M418 985 Q410 870 540 865 Q670 870 662 985 Q640 925 590 930 Q540 900 490 935 Q440 925 418 985 Z" fill="#2a1d14"/>
+        <!-- eyes -->
+        <circle cx="495" cy="1010" r="13" fill="#1b1330"/>
+        <circle cx="585" cy="1010" r="13" fill="#1b1330"/>
+        <!-- stressed face -->
+        <g id="faceStress" stroke="#1b1330" stroke-width="9" stroke-linecap="round" fill="none">
+          <path d="M468 982 L518 966"/>
+          <path d="M562 966 L612 982"/>
+          <path d="M478 1036 q17 8 34 0 M568 1036 q17 8 34 0" stroke="#c98d6a" stroke-width="5"/>
+          <path d="M495 1080 q11 -12 22 0 t22 0 t22 0 t22 0"/>
+        </g>
+        <!-- happy face -->
+        <g id="faceHappy" stroke="#1b1330" stroke-width="9" stroke-linecap="round" fill="none">
+          <path d="M470 972 Q493 958 518 970"/>
+          <path d="M562 970 Q587 958 610 972"/>
+          <path d="M485 1060 Q540 1115 595 1060" fill="#fff" stroke-width="8"/>
+        </g>
+        <path id="sweat" d="M672 930 q16 26 0 40 q-16 -14 0 -40z" fill="#7cc8ff"/>
+      </g>
+      <!-- stressed arms: hands grabbing head -->
+      <g id="armsStress">
+        <g stroke="#3a3f8f" stroke-width="58" stroke-linecap="round" fill="none">
+          <path d="M420 1190 L380 1080"/>
+          <path d="M660 1190 L700 1080"/>
+        </g>
+        <circle cx="398" cy="1030" r="40" fill="#f2c6a0"/>
+        <circle cx="682" cy="1030" r="40" fill="#f2c6a0"/>
+      </g>
+      <!-- desk -->
+      <rect x="110" y="1400" width="860" height="46" rx="14" fill="#d9d3ee"/>
+      <rect x="150" y="1446" width="780" height="330" fill="url(#deskG)"/>
+      <!-- coffee mug -->
+      <g id="mug"><rect x="770" y="1320" width="70" height="82" rx="12" fill="#fff"/><path d="M840 1340 q30 0 30 25 q0 25 -30 25" stroke="#fff" stroke-width="12" fill="none"/></g>
+    </svg>
+    <div id="sheets"></div>
+    <div id="bubbles"></div>
+  </div>
+
+  <div id="cards"></div>
+  <div class="abs bubble" id="okBubble"></div>
+
+  <div class="abs" id="phone"><div id="screen"><div class="logo"><img src="assets/heshbonit_logo.png" alt=""></div><div class="u gt" id="phoneUrl"></div></div></div>
+
+  <div id="caps"></div>
+
+  <div class="abs" id="price">
+    <div id="priceIntro"></div>
+    <div id="priceLine"><span id="priceNum" class="gt"></span><span id="perMonth"></span></div>
+    <div id="priceSub"></div>
+    <div id="chips"></div>
+  </div>
+
+  <div class="abs" id="cta">
+    <div class="logo" id="ctaLogo"><img src="assets/heshbonit_logo.png" alt=""></div>
+    <div id="ctaHead"></div>
+    <div id="ctaBtn"></div><br>
+    <div id="urlWrap"><div id="url" class="gt"></div></div>
+    <div id="ctaFoot"></div>
+  </div>
+
+  <div id="flash"></div>
+</div>
+
+<script>
+/* ============================================================
+   EDIT YOUR TEXT HERE — everything the viewer reads lives in CONFIG.
+   ============================================================ */
+const CONFIG = {
+  // [start, end, html, top(px)]
+  captions: [
+    [0.4, 1.9, 'זה יוסי.', 260],
+    [1.9, 3.5, 'יש לו עסק.', 260],
+    [3.5, 6.0, 'ויש לו… <span style="color:var(--red)">בלגן.</span>', 260],
+    [10.2, 11.9, 'מוכר לך?', 1640],
+    [11.9, 14.0, 'עד שיוסי גילה את', 260],
+    [17.2, 19.4, 'עכשיו הכל מסודר.<br><span class="gt">במקום אחד.</span>', 1600],
+  ],
+  // the problems chasing Yossi: [emoji, who, what]
+  problems: [
+    ['📞', 'רואה החשבון', 'איפה הדוחות?!'],
+    ['🚚', 'צי הרכבים', 'הטסט של הטנדר פג מחר!'],
+    ['📦', 'ספק', 'עוד לא שילמת את החשבון'],
+    ['🧾', 'לקוח', 'לא קיבלתי חשבונית…'],
+  ],
+  folders: [
+    ['receipt', 'חשבוניות<br>וקבלות'],
+    ['truck', 'ניהול<br>צי רכבים'],
+    ['users', 'ניהול<br>ספקים'],
+    ['chart', 'דוחות<br>לרו״ח'],
+  ],
+  okWho: 'רואה החשבון',
+  okText: 'קיבלתי את הדוחות, תודה! 👌',
+  site: 'heshbonit.org',
+  priceIntro: 'כל זה ב־',
+  price: 30,
+  perMonth: 'לחודש',
+  priceSub: 'הכל כלול. מבטלים בלחיצה, מתי שרוצים.',
+  chips: ['בלי אותיות קטנות', 'ללא עליית מחירים <span class="emoji">🚀</span>'],
+  ctaHead: 'תעשה סדר<br><span class="gt">בעסק.</span>',
+  ctaBtn: 'מתחילים חודש חינם',
+  ctaFoot: 'בלי כרטיס אשראי בהרשמה',
+};
+const DURATION = 27; // seconds
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, start, dur) => clamp((t - start) / dur);
+const lerp = (a, b, p) => a + (b - a) * p;
+const eOut = p => 1 - Math.pow(1 - p, 3);
+const eIn = p => p * p * p;
+const eInOut = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+const eBack = p => { const c = 1.9; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
+const show = (el, o) => { el.style.opacity = o; el.style.visibility = o <= 0.001 ? 'hidden' : 'visible'; };
+// deterministic pseudo-random so every render is identical
+const rnd = i => { const x = Math.sin(i * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
+const svg = (paths, size, stroke = '#fff', w = 2.2) =>
+  `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
+const ICONS = {
+  receipt: '<path d="M6 2h9l5 5v15l-2.5-1.5L15 22l-2.5-1.5L10 22l-2.5-1.5L5 22V3a1 1 0 0 1 1-1z"/><path d="M14 2v6h6"/><path d="M9 12h6M9 16h4"/>',
+  truck: '<path d="M2 6h11v10H2z"/><path d="M13 9h4l4 4v3h-8z"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>',
+  users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7"/><path d="M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/>',
+  chart: '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-6"/><path d="M16 8h4v4"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+};
+
+/* ---------- build DOM ---------- */
+$('caps').innerHTML = CONFIG.captions.map(([, , h, top]) => `<div class="abs cap" style="top:${top}px">${h}</div>`).join('');
+const N_SHEETS = 16;
+const MARKS = ['!', '₪?', '!!', 'דחוף'];
+$('sheets').innerHTML = Array.from({ length: N_SHEETS }, (_, i) =>
+  `<div class="sheet"><i></i><i></i><i></i><i></i><i></i>${i % 3 === 0 ? `<b>${MARKS[i % 4]}</b>` : ''}</div>`).join('');
+$('bubbles').innerHTML = CONFIG.problems.map(([e, who, what]) =>
+  `<div class="abs bubble"><span class="emoji" style="font-size:56px">${e}</span><span><span class="who">${who}</span>${what}</span></div>`).join('');
+$('cards').innerHTML = CONFIG.folders.map(([ic, h]) =>
+  `<div class="abs card"><div class="ic">${svg(ICONS[ic], 64)}</div><h3>${h}</h3><div class="ok">${svg(ICONS.check, 40, '#fff', 3.4)}</div></div>`).join('');
+$('okBubble').innerHTML = `<span class="emoji" style="font-size:56px">📞</span><span><span class="who">${CONFIG.okWho}</span>${CONFIG.okText.replace(/(\p{Extended_Pictographic})/gu, '<span class="emoji">$1</span>')}</span>`;
+$('phoneUrl').textContent = CONFIG.site;
+$('priceIntro').textContent = CONFIG.priceIntro;
+$('perMonth').textContent = CONFIG.perMonth;
+$('priceSub').textContent = CONFIG.priceSub;
+$('chips').innerHTML = CONFIG.chips.map(txt =>
+  `<div class="chip">${svg(ICONS.check, 60, 'var(--green)', 3.2)}<span>${txt}</span></div>`).join('');
+$('ctaHead').innerHTML = CONFIG.ctaHead;
+$('ctaBtn').innerHTML = `<span>${CONFIG.ctaBtn}</span>${svg('<path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/>', 64, '#fff', 2.8)}`;
+$('url').textContent = CONFIG.site;
+$('ctaFoot').textContent = CONFIG.ctaFoot;
+
+// where each sheet lands: two messy piles on the desk + a few scattered
+const SHEET_POS = Array.from({ length: N_SHEETS }, (_, i) => {
+  const pile = i % 2, k = Math.floor(i / 2);
+  return {
+    x: (pile ? 780 : 150) + (rnd(i) - .5) * 70 - (pile ? 0 : 0),
+    y: 1215 - k * 26,
+    r: (rnd(i + 50) - .5) * 40,
+    d: 1.0 + i * .28,
+  };
+});
+const BUBBLE_Y = [330, 480, 630, 780];
+const CARD_POS = [{ x: 560, y: 300 }, { x: 60, y: 300 }, { x: 560, y: 570 }, { x: 60, y: 570 }];
+
+/* ---------- timeline: pure function of t ---------- */
+function seek(t) {
+  $('blob1').style.transform = `translate(${-200 + Math.sin(t * .5) * 120}px, ${-150 + Math.cos(t * .4) * 140}px)`;
+  $('blob2').style.transform = `translate(${480 + Math.cos(t * .35) * 140}px, ${1300 + Math.sin(t * .45) * 160}px)`;
+
+  // stress level: builds up, drops to zero once Heshbonit arrives
+  const stress = clamp(prog(t, 3.5, 3) * 0.6 + prog(t, 6.3, 3) * 0.4) * (1 - eInOut(prog(t, 14.8, 1)));
+  const calm = eInOut(prog(t, 14.8, 1));
+  $('redGlow').style.opacity = stress * (0.6 + 0.4 * Math.sin(t * 6));
+
+  /* captions */
+  [...$('caps').children].forEach((c, i) => {
+    const [a, b] = CONFIG.captions[i];
+    const pin = eBack(prog(t, a, .4)), pout = eIn(prog(t, b - .3, .3));
+    c.style.transform = `translateY(${(1 - pin) * 50}px) scale(${.85 + .15 * pin})`;
+    show(c, clamp(prog(t, a, .2)) * (1 - pout));
+  });
+
+  /* world: Yossi + desk (0 – 19.6) */
+  const shake = stress > .5 ? (stress - .5) * 2 : 0;
+  const zoomIn = eInOut(prog(t, 0, 1.2));
+  const worldOut = eIn(prog(t, 19.2, .5));
+  $('world').style.transform =
+    `translate(${Math.sin(t * 37) * 6 * shake}px, ${(1 - zoomIn) * 200 + Math.cos(t * 41) * 4 * shake}px) scale(${lerp(1.08, 1, zoomIn) - worldOut * .15})`;
+  show($('world'), zoomIn * (1 - worldOut));
+
+  $('head').style.transform = `rotate(${Math.sin(t * 9) * 4 * stress}deg)`;
+  $('head').style.transformOrigin = '540px 1100px';
+  $('faceStress').style.opacity = clamp(1 - calm);
+  $('faceHappy').style.opacity = calm;
+  $('armsStress').style.opacity = clamp(prog(t, 6.2, .3) * (1 - calm));
+  $('armsRelax').style.opacity = calm;
+  const sw = ((t * 1.3) % 1);
+  $('sweat').style.transform = `translateY(${sw * 60}px)`;
+  $('sweat').style.opacity = stress > .3 ? (1 - sw) : 0;
+
+  /* paper sheets pile up, then fly into their folders */
+  [...$('sheets').children].forEach((s, i) => {
+    const P = SHEET_POS[i];
+    const fall = eOut(prog(t, P.d, .55));
+    const jit = Math.sin(t * 8 + i) * 5 * stress;
+    let x = P.x, y = lerp(-400, P.y, fall), r = lerp(P.r * 3, P.r, fall) + jit, sc = 1, op = prog(t, P.d, .1);
+    // fly to a folder card
+    const card = CARD_POS[i % 4];
+    const f = eInOut(prog(t, 15.1 + i * .09, .6));
+    x = lerp(x, card.x + 160, f); y = lerp(y, card.y + 20, f); r = lerp(r, 0, f); sc = lerp(1, .25, f);
+    op *= 1 - prog(t, 15.1 + i * .09 + .45, .15);
+    s.style.transform = `translate(${x}px, ${y}px) rotate(${r}deg) scale(${sc})`;
+    show(s, op);
+  });
+
+  /* problem bubbles pop around him */
+  [...$('bubbles').children].forEach((b, i) => {
+    // alternate sides, anchored to the screen edge so nothing is cut off
+    const x = i % 2 ? 1080 - 30 - b.offsetWidth : 30;
+    const pin = eBack(prog(t, 6.3 + i * .85, .45));
+    const out = eIn(prog(t, 11.5 + i * .06, .35));
+    const wob = Math.sin(t * 11 + i * 2) * 3 * stress;
+    b.style.transform = `translate(${x}px, ${BUBBLE_Y[i]}px) scale(${pin * (1 - out)}) rotate(${wob}deg)`;
+    b.style.transformOrigin = i % 2 ? '100% 100%' : '0% 100%';
+    show(b, clamp(pin) * (1 - out));
+  });
+
+  /* phone with Heshbonit slides up (12.3 – 15.0) */
+  const ph = eOut(prog(t, 12.3, .7)), phOut = eIn(prog(t, 14.4, .5));
+  $('phone').style.transform = `translateY(${lerp(1950, 560, ph) - phOut * 200}px) scale(${1 + phOut * .6}) rotate(${(1 - ph) * 10}deg)`;
+  show($('phone'), t >= 12.3 ? 1 - phOut : 0);
+  $('flash').style.opacity = Math.sin(Math.PI * prog(t, 14.55, .5)) * .85;
+
+  /* folders appear and fill */
+  [...$('cards').children].forEach((c, i) => {
+    const P = CARD_POS[i];
+    const pin = eBack(prog(t, 14.9 + i * .12, .5));
+    const ok = eBack(prog(t, 16.2 + i * .18, .4));
+    const out = eIn(prog(t, 19.2, .45));
+    c.style.transform = `translate(${P.x}px, ${P.y - out * 200}px) scale(${pin})`;
+    c.querySelector('.ok').style.transform = `scale(${ok})`;
+    show(c, clamp(pin) * (1 - out));
+  });
+
+  /* accountant is happy */
+  const okb = eBack(prog(t, 17.0, .5)), okOut = eIn(prog(t, 19.1, .4));
+  $('okBubble').style.transform = `translate(${(1080 - $('okBubble').offsetWidth) / 2}px, ${850}px) scale(${okb * (1 - okOut)})`;
+  show($('okBubble'), clamp(okb) * (1 - okOut));
+
+  /* price (19.6 – 23.4) */
+  const pi = eOut(prog(t, 19.7, .5));
+  $('priceIntro').style.opacity = pi; $('priceIntro').style.transform = `translateY(${(1 - pi) * 40}px)`;
+  const pn = eBack(prog(t, 20.0, .6));
+  $('priceNum').textContent = '₪' + Math.round(CONFIG.price * eOut(prog(t, 20.0, .9)));
+  $('priceNum').style.transform = `scale(${.5 + .5 * pn})`;
+  $('priceNum').style.opacity = prog(t, 20.0, .15);
+  const pm = eOut(prog(t, 20.5, .4));
+  $('perMonth').style.opacity = pm; $('perMonth').style.transform = `translateX(${(1 - pm) * 40}px)`;
+  const ps = eOut(prog(t, 20.8, .5));
+  $('priceSub').style.opacity = ps; $('priceSub').style.transform = `translateY(${(1 - ps) * 30}px)`;
+  [...$('chips').children].forEach((c, i) => {
+    c.style.transform = `scale(${eBack(prog(t, 21.3 + i * .45, .5))})`;
+    c.style.opacity = prog(t, 21.3 + i * .45, .15);
+  });
+  const s5out = eIn(prog(t, 23.3, .4));
+  $('price').style.transform = `translateY(${-s5out * 120}px)`;
+  show($('price'), t >= 19.6 ? 1 - s5out : 0);
+
+  /* CTA (23.7 – 27) */
+  const c1 = eBack(prog(t, 23.75, .55)), c2 = eOut(prog(t, 24.0, .6)), c3 = eBack(prog(t, 24.4, .55)), c4 = eOut(prog(t, 24.8, .5));
+  $('ctaLogo').style.transform = `scale(${c1}) rotate(${(1 - c1) * 40}deg)`;
+  $('ctaHead').style.opacity = c2; $('ctaHead').style.transform = `translateY(${(1 - c2) * 70}px)`;
+  const pulse = t > 25.2 ? 1 + Math.sin((t - 25.2) * 5) * .035 : 1;
+  $('ctaBtn').style.transform = `scale(${c3 * pulse})`;
+  $('urlWrap').style.opacity = c4; $('urlWrap').style.transform = `translateY(${(1 - c4) * 30}px)`;
+  $('ctaFoot').style.opacity = eOut(prog(t, 25.1, .5));
+  show($('cta'), t >= 23.7 ? 1 : 0);
+}
+
+window.seek = seek;
+window.DURATION = DURATION;
+seek(0);
+
+if (!location.search.includes('render=1')) {
+  document.fonts.ready.then(() => {
+    const start = performance.now();
+    const loop = now => { seek(((now - start) / 1000) % DURATION); requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  });
+}
+</script>
+</body>
+</html>

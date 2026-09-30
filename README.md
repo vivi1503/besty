@@ -68,10 +68,17 @@ for [heshbonit.org](http://heshbonit.org), sized for Reels, TikTok and Stories.
   the top of the script, and brand colors are CSS variables in `:root`.
 - `promo/render_promo.js` — renders the HTML frame by frame into MP4.
 
+- `promo/yossi_mess.mp4` / `promo/yossi_mess.html` — a 27-second story ad:
+  a business owner buried in paperwork (accountant, fleet, suppliers and
+  clients all chasing him) until Heshbonit puts everything in order.
+- `promo/assets/heshbonit_logo.png` — the brand logo used in both videos.
+
 Re-render after editing (needs Node + Playwright and FFmpeg):
 
 ```bash
 node promo/render_promo.js -o promo/heshbonit_promo.mp4
 # with background music (fades out at the end):
 node promo/render_promo.js -o promo/heshbonit_promo.mp4 --audio music.mp3
+# the story ad:
+node promo/render_promo.js -i promo/yossi_mess.html -o promo/yossi_mess.mp4
 ```

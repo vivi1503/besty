@@ -6,7 +6,7 @@
  * so the output is smooth regardless of machine speed.
  *
  * Usage:
- *   node promo/render_promo.js [-o out.mp4] [--fps 30] [--audio music.mp3]
+ *   node promo/render_promo.js [-i page.html] [-o out.mp4] [--fps 30] [--audio music.mp3]
  *
  * Needs Playwright (npm i -g playwright) and FFmpeg on PATH (or set FFMPEG=/path/to/ffmpeg).
  */
@@ -19,6 +19,7 @@ const opt = (name, def) => {
   const i = args.indexOf(name);
   return i >= 0 ? args[i + 1] : def;
 };
+const input = path.resolve(opt('-i', path.join(__dirname, 'heshbonit_promo.html')));
 const out = path.resolve(opt('-o', 'heshbonit_promo.mp4'));
 const fps = Number(opt('--fps', 30));
 const audio = opt('--audio', null);
@@ -27,7 +28,7 @@ const ffmpegBin = process.env.FFMPEG || 'ffmpeg';
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
-  const url = 'file://' + path.join(__dirname, 'heshbonit_promo.html') + '?render=1';
+  const url = 'file://' + input + '?render=1';
   await page.goto(url, { waitUntil: 'networkidle' });
   await page.evaluate(() => document.fonts.ready);
   const duration = await page.evaluate(() => window.DURATION);
