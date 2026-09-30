@@ -54,3 +54,24 @@ to the video length.
 
 Supported image types: `.jpg`, `.jpeg`, `.png`, `.bmp`, `.webp`, `.tif`,
 `.tiff`.
+
+---
+
+# Heshbonit — Promo Motion Video
+
+`promo/` contains a 20-second vertical (1080×1920, 30 fps) motion-graphics ad
+for [heshbonit.org](http://heshbonit.org), sized for Reels, TikTok and Stories.
+
+- `promo/heshbonit_promo.mp4` — the rendered video.
+- `promo/heshbonit_promo.html` — the animation source. Open it in a browser to
+  watch a live loop. All on-screen text (Hebrew) is in the `CONFIG` object at
+  the top of the script, and brand colors are CSS variables in `:root`.
+- `promo/render_promo.js` — renders the HTML frame by frame into MP4.
+
+Re-render after editing (needs Node + Playwright and FFmpeg):
+
+```bash
+node promo/render_promo.js -o promo/heshbonit_promo.mp4
+# with background music (fades out at the end):
+node promo/render_promo.js -o promo/heshbonit_promo.mp4 --audio music.mp3
+```

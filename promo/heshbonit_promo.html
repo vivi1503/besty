@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>Heshbonit Promo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=block" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0b1b3f;
+    --navy-2: #13295c;
+    --mint: #19d3a2;
+    --mint-dark: #0ea882;
+    --sky: #5b8cff;
+    --paper: #ffffff;
+    --ink: #0b1b3f;
+    --muted: #6b7a99;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--navy); }
+  body { font-family: 'Heebo', sans-serif; color: #fff; position: relative; }
+  .abs { position: absolute; }
+  .center { left: 50%; top: 50%; transform: translate(-50%, -50%); }
+  #stage { position: absolute; inset: 0; overflow: hidden; }
+
+  /* background */
+  #bg { position: absolute; inset: 0; background: radial-gradient(120% 80% at 50% 0%, var(--navy-2), var(--navy)); }
+  .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .55; }
+  #blob1 { width: 700px; height: 700px; background: var(--mint); }
+  #blob2 { width: 800px; height: 800px; background: var(--sky); }
+  #wipe { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--mint);
+          left: 540px; top: 960px; transform: translate(-50%, -50%) scale(0); }
+
+  /* scene 1: paper chaos */
+  .sheet { position: absolute; width: 260px; height: 340px; background: #f4f6fb; border-radius: 14px;
+           box-shadow: 0 20px 50px rgba(0,0,0,.35); padding: 36px 30px; }
+  .sheet i { display: block; height: 14px; border-radius: 7px; background: #cfd6e6; margin-bottom: 20px; }
+  .sheet i:nth-child(2) { width: 70%; } .sheet i:nth-child(4) { width: 55%; } .sheet i:nth-child(5) { width: 80%; }
+  #q1 { width: 900px; left: 90px; top: 1380px; text-align: center; font-size: 92px; font-weight: 900; line-height: 1.15; }
+  #q1 span { display: inline-block; margin: 0 10px; }
+
+  /* scene 2: logo */
+  #logoWrap { width: 1080px; left: 0; top: 620px; text-align: center; }
+  #logoIcon { width: 260px; height: 260px; margin: 0 auto; border-radius: 64px; background: var(--navy);
+              display: flex; align-items: center; justify-content: center; box-shadow: 0 30px 70px rgba(11,27,63,.35); }
+  #wordmark { font-size: 170px; font-weight: 900; color: var(--navy); margin-top: 40px; letter-spacing: -2px; }
+  #tagline { font-size: 56px; font-weight: 500; color: var(--navy); margin-top: 10px; }
+
+  /* scene 3: invoice */
+  #s3title { width: 1080px; left: 0; top: 230px; text-align: center; font-size: 84px; font-weight: 900; line-height: 1.15; }
+  #s3title b { color: var(--mint); }
+  #invoice { width: 820px; left: 130px; top: 560px; background: var(--paper); border-radius: 36px; color: var(--ink);
+             padding: 60px 60px 50px; box-shadow: 0 40px 90px rgba(0,0,0,.4); }
+  #invHead { display: flex; justify-content: space-between; align-items: center; padding-bottom: 30px; border-bottom: 3px solid #eef1f7; }
+  #invHead .t { font-size: 52px; font-weight: 800; }
+  #invHead .n { font-size: 36px; color: var(--muted); font-weight: 500; direction: ltr; }
+  #invTo { font-size: 34px; color: var(--muted); margin: 26px 0 16px; }
+  .row { display: flex; justify-content: space-between; font-size: 42px; padding: 22px 0; border-bottom: 2px dashed #e4e8f1; }
+  .row .p { font-weight: 700; direction: ltr; }
+  #total { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; font-size: 50px; font-weight: 900; }
+  #totalNum { color: var(--mint-dark); direction: ltr; font-size: 64px; }
+  #sendBtn { margin-top: 44px; height: 120px; border-radius: 60px; background: var(--mint); color: var(--navy);
+             display: flex; align-items: center; justify-content: center; gap: 20px; font-size: 50px; font-weight: 900; }
+  #cursor { width: 70px; height: 70px; border-radius: 50%; background: rgba(255,255,255,.9); border: 6px solid var(--navy);
+            box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+  #sent { width: 1080px; left: 0; top: 820px; text-align: center; }
+  #sentCircle { width: 300px; height: 300px; border-radius: 50%; background: var(--mint); margin: 0 auto;
+                display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 30px rgba(25,211,162,.18); }
+  #sentText { font-size: 80px; font-weight: 900; margin-top: 60px; }
+
+  /* scene 4: benefits */
+  #s4title { width: 1080px; left: 0; top: 330px; text-align: center; font-size: 96px; font-weight: 900; }
+  .benefit { width: 880px; left: 100px; height: 230px; background: rgba(255,255,255,.08); border: 2px solid rgba(255,255,255,.16);
+             border-radius: 40px; display: flex; align-items: center; gap: 44px; padding: 0 50px; }
+  .benefit .ic { width: 140px; height: 140px; flex: none; border-radius: 36px; background: var(--mint);
+                 display: flex; align-items: center; justify-content: center; }
+  .benefit h3 { font-size: 60px; font-weight: 800; }
+  .benefit p { font-size: 38px; color: #b9c5e4; margin-top: 4px; }
+
+  /* scene 5: CTA */
+  #cta { width: 1080px; left: 0; top: 560px; text-align: center; }
+  #ctaIcon { width: 200px; height: 200px; margin: 0 auto; border-radius: 52px; background: var(--mint);
+             display: flex; align-items: center; justify-content: center; }
+  #ctaHead { font-size: 130px; font-weight: 900; margin-top: 70px; line-height: 1.05; }
+  #ctaSub { font-size: 52px; color: #b9c5e4; margin-top: 30px; }
+  #url { display: inline-block; margin-top: 90px; padding: 40px 90px; border-radius: 100px; background: var(--mint);
+         color: var(--navy); font-size: 80px; font-weight: 900; direction: ltr; letter-spacing: 1px; }
+  #urlRing { position: absolute; left: 50%; border-radius: 120px; border: 6px solid var(--mint); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"></div>
+  <div class="blob" id="blob1"></div>
+  <div class="blob" id="blob2"></div>
+
+  <!-- Scene 1 -->
+  <div id="s1">
+    <div class="sheet" id="sh0"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="sheet" id="sh1"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="sheet" id="sh2"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="sheet" id="sh3"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="sheet" id="sh4"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="abs" id="q1"></div>
+  </div>
+
+  <div id="wipe"></div>
+
+  <!-- Scene 2 -->
+  <div class="abs" id="logoWrap">
+    <div id="logoIcon"><svg width="150" height="150" viewBox="0 0 24 24" fill="none" stroke="#19d3a2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15l-2.5-1.5L15 22l-2.5-1.5L10 22l-2.5-1.5L5 22V3a1 1 0 0 1 1-1z"/><path d="M14 2v6h6"/><path d="M9 12h6M9 16h4"/></svg></div>
+    <div id="wordmark"></div>
+    <div id="tagline"></div>
+  </div>
+
+  <!-- Scene 3 -->
+  <div class="abs" id="s3title"></div>
+  <div class="abs" id="invoice">
+    <div id="invHead"><div class="t" id="invT"></div><div class="n" id="invN"></div></div>
+    <div id="invTo"></div>
+    <div id="rows"></div>
+    <div id="total"><span id="totalLbl"></span><span id="totalNum"></span></div>
+    <div id="sendBtn"><span id="sendLbl"></span><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#0b1b3f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg></div>
+  </div>
+  <div class="abs" id="cursor"></div>
+  <div class="abs" id="sent">
+    <div id="sentCircle"><svg width="170" height="170" viewBox="0 0 24 24" fill="none" stroke="#0b1b3f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path id="checkPath" d="M5 12.5l4.5 4.5L19 7.5" stroke-dasharray="22" stroke-dashoffset="22"/></svg></div>
+    <div id="sentText"></div>
+  </div>
+
+  <!-- Scene 4 -->
+  <div class="abs" id="s4title"></div>
+  <div id="benefits"></div>
+
+  <!-- Scene 5 -->
+  <div class="abs" id="cta">
+    <div id="ctaIcon"><svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#0b1b3f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15l-2.5-1.5L15 22l-2.5-1.5L10 22l-2.5-1.5L5 22V3a1 1 0 0 1 1-1z"/><path d="M14 2v6h6"/><path d="M9 12h6M9 16h4"/></svg></div>
+    <div id="ctaHead"></div>
+    <div id="ctaSub"></div>
+    <div style="position:relative;display:inline-block"><div id="urlRing"></div><div id="url"></div></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   EDIT YOUR TEXT HERE — everything the viewer reads lives in CONFIG.
+   ============================================================ */
+const CONFIG = {
+  question: ['עדיין', 'מבזבזים', 'שעות', 'על', 'ניירת?'],
+  brand: 'חשבונית',
+  tagline: 'חשבוניות דיגיטליות — פשוט, מהיר, מקצועי',
+  s3title: 'חשבונית מוכנה<br><b>בכמה קליקים</b>',
+  invoiceTitle: 'חשבונית',
+  invoiceNumber: '#1024',
+  invoiceTo: 'לכבוד: סטודיו אור בע״מ',
+  items: [
+    ['עיצוב לוגו', 1200],
+    ['בניית אתר', 4500],
+    ['שעת ייעוץ', 800],
+  ],
+  totalLabel: 'סה״כ לתשלום',
+  sendLabel: 'שליחה ללקוח',
+  sentText: 'נשלחה ללקוח!',
+  s4title: 'למה חשבונית?',
+  benefits: [
+    ['bolt', 'מהיר', 'חשבונית מוכנה תוך שניות'],
+    ['send', 'ישר ללקוח', 'שליחה במייל או בוואטסאפ'],
+    ['folder', 'הכל מסודר', 'כל המסמכים במקום אחד'],
+  ],
+  ctaHead: 'התחילו<br>עוד היום',
+  ctaSub: 'והפסיקו לרדוף אחרי ניירת',
+  url: 'heshbonit.org',
+};
+const DURATION = 20; // seconds
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, start, dur) => clamp((t - start) / dur);
+const lerp = (a, b, p) => a + (b - a) * p;
+const eOut = p => 1 - Math.pow(1 - p, 3);
+const eIn = p => p * p * p;
+const eInOut = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+const eBack = p => { const c = 1.9; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
+const shekel = n => '₪' + Math.round(n).toLocaleString('en-US');
+const show = (el, o) => { el.style.opacity = o; el.style.visibility = o <= 0.001 ? 'hidden' : 'visible'; };
+// fade window: fully visible between (a+fi) and (b-fo)
+const win = (t, a, b, fi = .3, fo = .3) => Math.min(prog(t, a, fi), 1 - prog(t, b - fo, fo));
+
+const ICONS = {
+  bolt: '<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>',
+  send: '<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/>',
+  folder: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M8 13h8"/>',
+};
+
+/* ---------- build DOM from CONFIG ---------- */
+$('q1').innerHTML = CONFIG.question.map(w => `<span>${w}</span>`).join(' ');
+$('wordmark').textContent = CONFIG.brand;
+$('tagline').textContent = CONFIG.tagline;
+$('s3title').innerHTML = CONFIG.s3title;
+$('invT').textContent = CONFIG.invoiceTitle;
+$('invN').textContent = CONFIG.invoiceNumber;
+$('invTo').textContent = CONFIG.invoiceTo;
+$('rows').innerHTML = CONFIG.items.map(([n, p]) =>
+  `<div class="row"><span>${n}</span><span class="p">${shekel(p)}</span></div>`).join('');
+$('totalLbl').textContent = CONFIG.totalLabel;
+$('sendLbl').textContent = CONFIG.sendLabel;
+$('sentText').textContent = CONFIG.sentText;
+$('s4title').textContent = CONFIG.s4title;
+$('benefits').innerHTML = CONFIG.benefits.map(([ic, h, p], i) =>
+  `<div class="abs benefit" style="top:${640 + i * 290}px"><div class="ic"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#0b1b3f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${ICONS[ic]}</svg></div><div><h3>${h}</h3><p>${p}</p></div></div>`).join('');
+$('ctaHead').innerHTML = CONFIG.ctaHead;
+$('ctaSub').textContent = CONFIG.ctaSub;
+$('url').textContent = CONFIG.url;
+
+const TOTAL = CONFIG.items.reduce((s, [, p]) => s + p, 0);
+const SHEETS = [
+  { x: 120, y: 260, r: -18, d: 0.00 }, { x: 700, y: 180, r: 14, d: 0.15 }, { x: 410, y: 520, r: -6, d: 0.30 },
+  { x: 80, y: 820, r: 22, d: 0.45 }, { x: 740, y: 760, r: -24, d: 0.60 },
+];
+
+/* ---------- timeline: pure function of t ---------- */
+function seek(t) {
+  // background blobs drift continuously
+  $('blob1').style.transform = `translate(${-200 + Math.sin(t * .5) * 120}px, ${-150 + Math.cos(t * .4) * 140}px)`;
+  $('blob2').style.transform = `translate(${480 + Math.cos(t * .35) * 140}px, ${1300 + Math.sin(t * .45) * 160}px)`;
+
+  /* Scene 1 (0 – 3.4s): paper chaos + question */
+  const s1out = eIn(prog(t, 2.9, .5));
+  SHEETS.forEach((s, i) => {
+    const el = $('sh' + i);
+    const pin = eOut(prog(t, s.d, .7));
+    const wob = Math.sin(t * 2 + i) * 4;
+    const y = lerp(-500, s.y, pin) + s1out * (900 + i * 120);
+    el.style.transform = `translate(${s.x}px, ${y}px) rotate(${s.r * pin + wob + s1out * s.r * 3}deg)`;
+    el.style.left = '0'; el.style.top = '0';
+    show(el, pin * (1 - s1out));
+  });
+  [...$('q1').children].forEach((w, i) => {
+    const p = eBack(prog(t, .6 + i * .22, .45));
+    w.style.transform = `translateY(${(1 - p) * 80}px) scale(${.6 + .4 * p})`;
+    w.style.opacity = clamp(p) * (1 - s1out);
+  });
+  show($('s1'), t < 3.5 ? 1 : 0);
+
+  /* Circle wipe into mint (3.2 – 3.9) and back out (6.4 – 7.0) */
+  const wIn = eInOut(prog(t, 3.2, .7)), wOut = eInOut(prog(t, 6.4, .6));
+  $('wipe').style.transform = `translate(-50%, -50%) scale(${wIn * 450})`;
+  show($('wipe'), wIn > 0 && wOut < 1 ? 1 - wOut : 0);
+
+  /* Scene 2 (3.6 – 6.8): logo reveal */
+  const ic = eBack(prog(t, 3.7, .6));
+  $('logoIcon').style.transform = `scale(${ic}) rotate(${(1 - ic) * -30}deg)`;
+  const wm = eOut(prog(t, 4.1, .6));
+  $('wordmark').style.transform = `translateY(${(1 - wm) * 60}px)`;
+  $('wordmark').style.opacity = wm;
+  const tg = eOut(prog(t, 4.6, .6));
+  $('tagline').style.transform = `translateY(${(1 - tg) * 40}px)`;
+  $('tagline').style.opacity = tg;
+  const s2out = eIn(prog(t, 6.3, .45));
+  $('logoWrap').style.transform = `scale(${1 - s2out * .2})`;
+  show($('logoWrap'), t >= 3.6 ? 1 - s2out : 0);
+
+  /* Scene 3 (6.9 – 13.2): invoice builds, gets sent */
+  const s3in = eOut(prog(t, 6.9, .7));
+  const fly = eIn(prog(t, 11.0, .5));
+  $('s3title').style.transform = `translateY(${(1 - s3in) * -60}px)`;
+  show($('s3title'), s3in * (1 - prog(t, 10.9, .4)));
+  $('invoice').style.transform = `translateY(${(1 - s3in) * 300 - fly * 1600}px) rotate(${fly * -12}deg) scale(${1 - fly * .3})`;
+  show($('invoice'), t < 11.6 ? s3in : 0);
+  [...$('rows').children].forEach((r, i) => {
+    const p = eOut(prog(t, 7.6 + i * .45, .45));
+    r.style.opacity = p; r.style.transform = `translateX(${(1 - p) * -80}px)`;
+  });
+  const tp = eOut(prog(t, 8.9, 1.1));
+  $('totalNum').textContent = shekel(TOTAL * tp);
+  $('total').style.opacity = prog(t, 8.8, .3);
+  const btnIn = eBack(prog(t, 9.4, .45));
+  const press = Math.sin(Math.PI * prog(t, 10.55, .3));
+  $('sendBtn').style.transform = `scale(${btnIn * (1 - press * .07)})`;
+  // cursor travels to the button and clicks
+  const cm = eInOut(prog(t, 9.8, .75));
+  $('cursor').style.transform = `translate(${lerp(900, 505, cm)}px, ${lerp(1750, 1250, cm)}px) scale(${1 - press * .25})`;
+  $('cursor').style.left = '0'; $('cursor').style.top = '0';
+  show($('cursor'), prog(t, 9.8, .2) * (1 - prog(t, 10.9, .2)));
+  // "sent" confirmation
+  const sc = eBack(prog(t, 11.4, .5));
+  $('sentCircle').style.transform = `scale(${sc})`;
+  $('checkPath').setAttribute('stroke-dashoffset', 22 * (1 - eOut(prog(t, 11.7, .45))));
+  const st = eOut(prog(t, 11.9, .5));
+  $('sentText').style.opacity = st; $('sentText').style.transform = `translateY(${(1 - st) * 50}px)`;
+  show($('sent'), t >= 11.3 ? 1 - eIn(prog(t, 12.9, .4)) : 0);
+
+  /* Scene 4 (13.3 – 16.9): benefits */
+  const s4t = eOut(prog(t, 13.3, .5)), s4out = eIn(prog(t, 16.5, .45));
+  $('s4title').style.transform = `scale(${.8 + .2 * s4t})`;
+  show($('s4title'), s4t * (1 - s4out));
+  [...$('benefits').children].forEach((b, i) => {
+    const p = eBack(prog(t, 13.7 + i * .35, .55));
+    const icp = eBack(prog(t, 13.95 + i * .35, .5));
+    b.style.transform = `translateX(${(1 - p) * 1100 - s4out * (1100 + i * 150)}px)`;
+    b.querySelector('.ic').style.transform = `scale(${icp}) rotate(${(1 - icp) * 90}deg)`;
+    show(b, prog(t, 13.7 + i * .35, .15) * (1 - s4out));
+  });
+
+  /* Scene 5 (16.9 – 20): CTA */
+  const c1 = eBack(prog(t, 16.95, .55)), c2 = eOut(prog(t, 17.25, .6)), c3 = eOut(prog(t, 17.6, .5)), c4 = eBack(prog(t, 17.9, .55));
+  $('ctaIcon').style.transform = `scale(${c1}) rotate(${(1 - c1) * 40}deg)`;
+  $('ctaHead').style.opacity = c2; $('ctaHead').style.transform = `translateY(${(1 - c2) * 70}px)`;
+  $('ctaSub').style.opacity = c3; $('ctaSub').style.transform = `translateY(${(1 - c3) * 40}px)`;
+  const pulse = t > 18.5 ? 1 + Math.sin((t - 18.5) * 5) * .035 : 1;
+  $('url').style.transform = `scale(${c4 * pulse})`;
+  const ring = ((t - 18.4) % 1.0 + 1) % 1.0;
+  const url = $('url');
+  const rw = url.offsetWidth, rh = url.offsetHeight;
+  $('urlRing').style.width = rw + 'px'; $('urlRing').style.height = rh + 'px';
+  $('urlRing').style.top = (url.offsetTop) + 'px';
+  $('urlRing').style.transform = `translateX(-50%) scale(${1 + ring * .35})`;
+  show($('urlRing'), t > 18.4 ? (1 - ring) * .8 : 0);
+  show($('cta'), t >= 16.9 ? 1 : 0);
+}
+
+window.seek = seek;
+window.DURATION = DURATION;
+seek(0);
+
+// Live preview when opened directly in a browser (the renderer sets ?render=1).
+if (!location.search.includes('render=1')) {
+  document.fonts.ready.then(() => {
+    const start = performance.now();
+    const loop = now => { seek(((now - start) / 1000) % DURATION); requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  });
+}
+</script>
+</body>
+</html>
